@@ -1,15 +1,15 @@
 public class Transition {
-    State source;
-    State dest;
-    String input;
+    private State source;
+    private State dest;
+    private String input;
 
-    public Transition (State state, State dest, String input) 
-    {
+    public Transition(State state, State dest, String input) {
         this.source = state;
         this.dest = dest;
         this.input = input;
     }
 
+    // Auto-generated getters and setters
     public State getSource() {
         return this.source;
     }
@@ -33,5 +33,23 @@ public class Transition {
     public void setInput(String input) {
         this.input = input;
     }
-    
+
+    @Override
+    public String toString()
+    {
+        // I did not include the transitions attribute 
+        // As I thought it might made it confusing 
+        //(I reserved it to be include in State toString)
+        String strSource =  "source: \n name: " + source.getName() +
+                            "\nbInitial: "+ source.isBInitial()+
+                            "\nbFinal"+ source.isBFinal()+
+                            "\n";
+
+        String strDest = "dest: \n name: " + dest.getName() +
+                        "\nbInitial: "+ dest.isBInitial()+
+                        "\nbFinal"+ dest.isBFinal()+
+                        "\n";
+                        
+        return strSource+ this.input + strDest; 
+    }
 }
