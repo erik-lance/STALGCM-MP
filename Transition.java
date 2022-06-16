@@ -9,30 +9,29 @@ public class Transition {
         this.input = input;
     }
     
-    // Auto-generated getters and setters
     public State getSource() {
         return this.source;
-    }
-
-    public void setSource(State source) {
-        this.source = source;
     }
 
     public State getDest() {
         return this.dest;
     }
 
-    public void setDest(State dest) {
-        this.dest = dest;
-    }
-
     public String getInput() {
         return this.input;
     }
+    
+    // public void setSource(State source) {
+    //     this.source = source;
+    // }
 
-    public void setInput(String input) {
-        this.input = input;
-    }
+    // public void setDest(State dest) {
+    //     this.dest = dest;
+    // }
+
+    // public void setInput(String input) {
+    //     this.input = input;
+    // }
 
     @Override
     public String toString()
