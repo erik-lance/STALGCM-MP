@@ -6,6 +6,12 @@ public class State {
     Boolean bFinal; // Changed into bFinal since final is a reserved token
     ArrayList<Transition> transitions;
 
+    /**
+     * Constructs a state given a name and initial/final state transition.
+     * @param name is the name of state
+     * @param bInitial determines if initial
+     * @param bFinal determines if acceptor
+     */
     public State(String name, Boolean bInitial, Boolean bFinal) {
         this.name = name;
         this.bInitial = bInitial;
@@ -13,6 +19,14 @@ public class State {
         this.transitions= new ArrayList<Transition>();
     }
 
+    public boolean equals(State s) {
+        return this.name.equals(s.getName());
+    }
+
+    /**
+     * Overrides toString function to display full details of state
+     * @return statename, if initial state, and if acceptor
+     */
     @Override
     public String toString() {
         return "{" +
@@ -20,6 +34,17 @@ public class State {
             ", bInitial='" + isBInitial() + "'" +
             ", bFinal='" + isBFinal() + "'" +
             "}";
+    }
+
+    /**
+     * Serves as clone function for DEEP cloning instead of shallow cloning.
+     * @param s is state to clone
+     * @return new state instance
+     */
+    public State(State s) {
+        this.name = s.name;
+        this.bInitial = s.isBInitial();
+        this.bFinal = s.isBFinal();
     }
 
     /**
