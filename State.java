@@ -19,6 +19,12 @@ public class State {
         this.transitions= new ArrayList<Transition>();
     }
 
+    /**
+     * Checks if a state is the same state it's looking for based on name. This is
+     * due to the presence of deep-cloned machines. We based them off of name now.
+     * @param s
+     * @return
+     */
     public boolean equals(State s) {
         return this.name.equals(s.getName());
     }
