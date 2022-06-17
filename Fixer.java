@@ -53,25 +53,66 @@ public class Fixer {
         
         /* ---------- Full Algorithm Section ---------- */
 
-        // If number of partitions
-        if (partitions.get(1).size() != m.getStates().size()) {
+        // Loop that calls expandOnce until fully expanded.
+        boolean dividable = true;
+        ArrayList<ArrayList<State>> newPartition = new ArrayList<ArrayList<State>>();
+        int numPartitions = 0;
 
+        while (dividable) {
+            newPartition = new ArrayList<ArrayList<State>>();
+            ArrayList<ArrayList<State>> reduced = expandOnce(partitions.get(numPartitions), m.inputs);
+
+            if (reduced != null) newPartition.addAll(reduced);
+            else dividable = false;
+
+            // Haven't utilized the partition function to number each partition, for now ganito muna.
         }
 
-        // Loop that calls reduceOnce until reduced.
+        
+        /* ----- State Reduction ----- */
+
+        ArrayList<ArrayList<State>> finalPartition = newPartition;
+        Machine finalMachine = new Machine(m.getName(), 0);
+
+        // Each group is considered a state. The individual states will be used as reference for now.
+        int finalTransitionNum = 0;
 
 
-        return null;
+        for (int i = 0; i < finalPartition.size(); i++) 
+        {
+            State newState = new State(finalPartition.get(i).get(0));
+            finalMachine.getStates().add(newState);
+        }
+
+        int i = 0;
+        for (State state : finalMachine.getStates()) 
+        {
+            int j = 0;
+            for (Transition t : state.getTransitions()) 
+            {
+                State destTrans = finalPartition.get(i).get(0).getTransitions().get(j).getDest();
+                String inputString = destTrans.getTransitions().get(j).getInput();
+                int groupTransition = Integer.parseInt(getDestGroup(finalPartition, finalPartition.get(i).get(0), destTrans));
+
+                // By getting the group transition number, we can easily feed the destination state based on the group number (w/c is the index num of the state)
+                state.makeTransition(finalMachine.getStates().get(groupTransition),inputString);
+                j++;
+            }
+            i++;    
+        }
+
+
+        return finalMachine;
     }
 
     /**
-     * This will attempt to reduce the machine once. Given a certain partition. It will return
+     * This will attempt to expand the machine once. Given a certain partition. It will return
      * a new partition that can be used for the partitions variable as seen in the partitionAlgorithm function
      * @param pGroup is the partition group being used as reference
      * @param inputs is the list of possible inputs that a machine will use.
      * @return an arraylist arraylist of states (which is the same datatype as the partitions variable in the partitionAlgorithm function)
      */
-    public ArrayList<ArrayList<State>> reduceOnce(ArrayList<ArrayList<State>> pGroup, ArrayList<String> inputs) {
+    public ArrayList<ArrayList<State>> expandOnce(ArrayList<ArrayList<State>> pGroup, ArrayList<String> inputs) {
 
         // A group of partitions of states based on reject/accept
         // E.g. Group 0, State 0
@@ -143,8 +184,8 @@ public class Fixer {
                     {
                         reducedList.get(numGroups).add(pGroup.get(i).get(k));
                     }
+                    k++;
                 }
-                k++;
                 numGroups++;
             }
         }
@@ -171,8 +212,8 @@ public class Fixer {
                     {
                         reducedList.get(numGroups).add(pGroup.get(i).get(k));
                     }
-                }
-                k++;
+                    k++;
+                }               
                 numGroups++;
             }
         }
