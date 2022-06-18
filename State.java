@@ -118,6 +118,23 @@ public class State {
         }
         return transList;
     }
+
+    /**
+     * Gets a full transition string (for DFAs) e.g. A-> B and A->C will return A -> BC
+     * @param input string input to check
+     * @return stringname
+     */
+    public String getTransitionString(String input) {
+        ArrayList<Transition> transList = getTransitions(input);
+        String finalName = "";
+
+        // Concats every string name at destination
+        for (Transition transition : transList) 
+        {
+            finalName.concat(transition.getDest().getName());
+        }
+        return finalName;
+    }
     
     // public void setName(String name) {
     //     this.name = name;
