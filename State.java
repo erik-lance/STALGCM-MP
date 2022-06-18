@@ -86,6 +86,15 @@ public class State {
         transitions.add(new Transition(this, dest, input));
     }
 
+    /**
+     * This is for when transitions added to this state are obviously someone else's.
+     */
+    public void normalizeTransitions() {
+        for (Transition trans : transitions) {
+            trans.setSource(this);
+        }
+    }
+
     public String getName() {
         return this.name;
     }
