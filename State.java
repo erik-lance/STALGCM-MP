@@ -102,6 +102,13 @@ public class State {
         return this.transitions;
     }
 
+    public ArrayList<Transition> getTransitions(String input) {
+        ArrayList<Transition> transList = new ArrayList<Transition>();
+        for (Transition transition : transitions) {
+            if (transition.getInput().equals(input)) transList.add(transition)
+        }
+        return transList;
+    }
     
     // public void setName(String name) {
     //     this.name = name;
