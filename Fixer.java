@@ -1,3 +1,4 @@
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -6,6 +7,132 @@ public class Fixer {
     private ArrayList<State> states;
 
     public Machine convertToDFA(Machine m) {
+        Machine newMachine = new Machine(m.getName(), m.getTransitionNum());
+
+        // Reference to states
+        ArrayList<State> mStates = m.getStates();
+
+        ArrayList<State> newStates = new ArrayList<State>();
+        State initState = m.getInitialState();
+
+        newStates.add(new State(initState));
+        
+        // CREATES A STORE STATE
+        ArrayList<State> storageStates = new ArrayList<State>();
+        for (State state : mStates) {
+            storageStates.add(new State(state));
+        }
+
+        // Deep Clones Transitions
+        for (int i = 0; i < mStates.size(); i++) 
+        {
+            for (Transition trSt : mStates.get(i).getTransitions()) 
+            {
+                for (State storStat : storageStates) 
+                {
+                    if (trSt.getDest().equals(storStat)) 
+                    {
+                        storageStates.get(i).makeTransition(storStat, trSt.getInput());
+                        break;
+                    }
+                }        
+            }
+        }
+
+        for (State state : storageStates) {
+            if (state.isBInitial()) 
+            {
+                initState = state;
+                break;
+            }
+        }
+
+        // Since we're just reusing the same list, just feed the index in order to duplicate it!
+        ArrayList<Integer> newTableIndex = new ArrayList<Integer>();
+        ArrayList<State> expanded = new ArrayList<State>();
+
+        // NFA Expander and connected
+        State cur_state = initState;
+        boolean isDeadHere = false;
+
+        ArrayList<State> stateStack = new ArrayList<State>();
+        stateStack.add(cur_state);
+        expanded.add(cur_state);
+
+        // Stops once machine finds there is no more to add
+        while (cur_state != null) {
+            for (String input : m.getInputs()) 
+            {
+                // Checks first if this state already exists
+                String newName = cur_state.getTransitionString(input);
+                State possibleState = doesStateExist(newName, storageStates);
+
+                // TODO: We found a deadstate DO SOMETHIN LATER
+                if (newName == null) {
+                    break;
+                }
+
+                if (possibleState != null) 
+                {
+                    // Since we have a reference to this in the original table already
+                    // there is NO need to do anything.
+
+                    // This adds the index of which state to get from.
+                    for (int i = 0; i < storageStates.size(); i++) {
+                        if (possibleState.equals(storageStates.get(i))) {
+                            newTableIndex.add(i);
+                            break;
+                        }
+                    }
+
+                    expanded.add(possibleState);
+
+                    break;
+                }
+                else
+                {
+                    // We found a DFA input. We will add every transition this way.
+                    // Set final later.
+                    State createState = new State(newName, false, false);
+
+                    // Add transitions to new state at X input.
+                    // This will add transitions for all inputs.
+
+                    //e.g. First grab A's transitions (A-> C) && (A -> D)
+                    for (Transition trans : cur_state.getTransitions(input)) 
+                    {
+                        // Since one of the states are final, the new state is final.
+                        if (trans.getDest().isBFinal()) createState.setBFinal(true);
+
+                        // in This inner loop, we check for their transitions (C -> B) && (D -> E)
+                        for (Transition innerTrans : trans.getDest().getTransitions()) 
+                        {
+                            createState.makeTransition(innerTrans.getDest(), innerTrans.getInput());
+                        }
+                    }
+
+
+                    // Since the state is now complete, we add its index
+                    // and we add it to the main list as an official state.
+                    newTableIndex.add(storageStates.size());
+                    storageStates.add(createState);
+                    stateStack.add(createState);
+
+                    expanded.add(createState);
+
+                    // make original state connect to new state instead.
+                    cur_state.replaceTransitions(input, createState);
+                }
+                
+            }
+            // changes cur_state to whatever is in queue
+            stateStack.remove(0);
+            if (stateStack.size() > 0) {cur_state = stateStack.get(0);}
+        }
+        
+
+        // Dead state will be called _deadState
+
         return null;
     }
 
@@ -246,6 +373,28 @@ public class Fixer {
             groupNum++;
         }
 
+        return null;
+    }
+
+    /**
+     * Checks if there is at least one state that is the same BY NAME
+     * @param s state to check
+     * @param group to check if it exists in
+     * @return said state, else null
+     */
+    public State doesStateExist(State s, ArrayList<State> group) {
+        for (State state : group) 
+        {
+            if (s.equals(state)) return state;
+        }
+        return null;
+    }
+
+    public State doesStateExist(String s, ArrayList<State> group) {
+        for (State state : group) 
+        {
+            if (s.equals(state.getName())) return state;
+        }
         return null;
     }
 }

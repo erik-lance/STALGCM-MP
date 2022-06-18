@@ -83,7 +83,43 @@ public class State {
      * @param input input needed to go to destination from source
      */
     public void makeTransition (State dest, String input){
-        transitions.add(new Transition(this, dest, input));
+        boolean safe = true;
+        for (Transition t : transitions) {
+            if (t.getInput().equals(input) && t.getDest().equals(dest)) {
+                System.out.println("\n\n [MOST LIKELY NFA PRINT] found a transition to the same destination. Ignoring . . . \n\n");
+                safe = false;
+                break;
+            }
+        }
+
+        // Makes it so that it only adds the transition IF it is not a duplicate.
+        if (safe) transitions.add(new Transition(this, dest, input));
+    }
+
+    /**
+     * This is for when transitions added to this state are obviously someone else's.
+     */
+    public void normalizeTransitions() {
+        for (Transition trans : transitions) {
+            trans.setSource(this);
+        }
+    }
+
+    /**
+     * This replaces current transitions with one new transition.
+     * Made for NFA transition replacement.
+     * @param input string input to watch
+     * @param dest string to transition to
+     */
+    public void replaceTransitions(String input, State dest) {
+        for (Transition transition : transitions) {
+            if (transition.getInput().equals(input)) 
+            {
+                transitions.remove(transition);
+            }
+        }
+
+        this.makeTransition(dest, input);
     }
 
     public String getName() {
@@ -102,6 +138,32 @@ public class State {
         return this.transitions;
     }
 
+    public ArrayList<Transition> getTransitions(String input) {
+        ArrayList<Transition> transList = new ArrayList<Transition>();
+        for (Transition transition : transitions) {
+            if (transition.getInput().equals(input)) transList.add(transition)
+        }
+        return transList;
+    }
+
+    /**
+     * Gets a full transition string (for DFAs) e.g. A-> B and A->C will return A -> BC
+     * @param input string input to check
+     * @return stringname
+     */
+    public String getTransitionString(String input) {
+        ArrayList<Transition> transList = getTransitions(input);
+        String finalName = "";
+
+        if (transList.size() <= 0) return null;
+
+        // Concats every string name at destination
+        for (Transition transition : transList) 
+        {
+            finalName.concat(transition.getDest().getName());
+        }
+        return finalName;
+    }
     
     // public void setName(String name) {
     //     this.name = name;
@@ -111,9 +173,9 @@ public class State {
     //     this.bInitial = bInitial;
     // }
     
-    // public void setBFinal(Boolean bFinal) {
-    //     this.bFinal = bFinal;
-    // }
+    public void setBFinal(Boolean bFinal) {
+        this.bFinal = bFinal;
+    }
 
     // public void setTransitions(ArrayList<Transition> transitions) {
     //     this.transitions = transitions;

@@ -54,6 +54,17 @@ public class Machine {
         return out;
     }
 
+    /**
+     * Simply grabs the initial state of the machine by looping through all states.
+     * @return initial state of machine. null if none
+     */
+    public State getInitialState() {
+        for (State state : states) {
+            if (state.isBInitial()) return state;
+        }
+        return null;
+    }
+
     public String getName() {
         return this.name;
     }
