@@ -7,7 +7,6 @@ public class Fixer {
     private ArrayList<State> states;
 
     public Machine convertToDFA(Machine m) {
-        Machine newMachine = new Machine(m.getName(), m.getTransitionNum());
 
         // Reference to states
         ArrayList<State> mStates = m.getStates();
@@ -53,22 +52,46 @@ public class Fixer {
 
         // NFA Expander and connected
         State cur_state = initState;
+
+
+        /* --------------- Dead State Code --------------- */
+        State deadState = new State("_deadState", false, false);
         boolean isDeadHere = false;
 
+        for (String input : m.getInputs()) 
+        {
+            deadState.makeTransition(deadState, input);
+        }
+        /* --------------- END OF DEADSTATE --------------- */
+
+        // Initializes loop
         ArrayList<State> stateStack = new ArrayList<State>();
         stateStack.add(cur_state);
         expanded.add(cur_state);
 
         // Stops once machine finds there is no more to add
         while (cur_state != null) {
+            // Checks each input of said machine
             for (String input : m.getInputs()) 
             {
                 // Checks first if this state already exists
                 String newName = cur_state.getTransitionString(input);
                 State possibleState = doesStateExist(newName, storageStates);
+                State possibleCurList = doesStateExist(newName, expanded);
 
-                // TODO: We found a deadstate DO SOMETHIN LATER
+                // Upon empty transitions at said input, connect cur_state to dead state
                 if (newName == null) {
+
+                    // Adds dead state to list since it exists
+                    if (!isDeadHere)
+                    {
+                        isDeadHere = true;
+                        expanded.add(deadState);   
+                    }
+
+                    // Sets empty transition to transition to this dead state instead
+                    cur_state.makeTransition(deadState, input);
+
                     break;
                 }
 
@@ -85,7 +108,17 @@ public class Fixer {
                         }
                     }
 
-                    expanded.add(possibleState);
+                    // If this is an NFA connection (A->B) && (A->C),
+                    // replace transition to existing combined state.
+                    if (cur_state.getTransitions().size() > 1) {
+                        // (Connects it to the reference in the new list.
+                        // Since it's dynamic, it makes no  difference if
+                        // it's in the new or old list)
+                        cur_state.replaceTransitions(input, possibleCurList);
+                    }
+
+                    // Check if it's in the new expanded list before adding.
+                    if (possibleCurList == null) expanded.add(possibleState);
 
                     break;
                 }
@@ -128,12 +161,20 @@ public class Fixer {
             // changes cur_state to whatever is in queue
             stateStack.remove(0);
             if (stateStack.size() > 0) {cur_state = stateStack.get(0);}
+            else cur_state = null;
         }
-        
 
-        // Dead state will be called _deadState
 
-        return null;
+
+        // Create machine Here
+        Machine newMachine = new Machine(m.getName(), m.getTransitionNum());
+        newMachine.setInputs(m.getInputs());
+        newMachine.cloneStates(expanded);
+
+        // REDUCE HERE
+        Machine reduced = partitionAlgorithm(newMachine);
+
+        return reduced;
     }
 
 
