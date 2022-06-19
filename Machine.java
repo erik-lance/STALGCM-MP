@@ -46,6 +46,42 @@ public class Machine {
         return clone;
     }
 
+    public void cloneStates(ArrayList<State> cloneList) {
+        ArrayList<State> newStates = new ArrayList<State>();
+
+        for (State state: cloneList) {
+            newStates.add(new State(state));
+        }
+
+        // This deep clones every transition properly.
+        for (int i = 0; i < cloneList.size(); i++) {
+            for (Transition t : cloneList.get(i).getTransitions())
+            {
+                State dest = null;
+                for (int j = 0; j < cloneList.size(); j++)
+                {
+                    // We get this destination state from our new list.
+                    // Since the states of cloneList and newStates are the same, we're simply
+                    // duplicating the transition in our own newState.
+                    State destRef = newStates.get(j);
+                    if (t.getDest().equals(destRef))
+                    {
+                        dest=destRef;
+                        break;
+                    }
+                }
+
+                // Each i iteration looks for a state to check their transitions
+                // Each j iteration looks at the list of states said state could be looking at
+                // When we find that, here we get i-State to make a transition to that j-State we found.
+                newStates.get(i).makeTransition(dest, t.getInput());
+            }
+        }
+
+        // This formally makes the machine use the new states.
+        this.states.addAll(newStates);
+    }
+
     public Boolean isMDFA (){
         Boolean out = false;
 
@@ -89,13 +125,13 @@ public class Machine {
     //     this.TransitionNum = TransitionNum;
     // }
 
-    // public void setStates(ArrayList<State> states) {
-    //     this.states = states;
-    // }
+    public void setStates(ArrayList<State> states) {
+        this.states = states;
+    }
 
-    // public void setInputs(ArrayList<String> inputs) {
-    //     this.inputs = inputs;
-    // }
+    public void setInputs(ArrayList<String> inputs) {
+        this.inputs = inputs;
+    }
 
     
 
