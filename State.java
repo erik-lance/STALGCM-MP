@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class State {
     String name;
-    Boolean bInitial;
-    Boolean bFinal; // Changed into bFinal since final is a reserved token
+    boolean bInitial;
+    boolean bFinal; // Changed into bFinal since final is a reserved token
     ArrayList<Transition> transitions;
 
     /**
@@ -12,10 +12,15 @@ public class State {
      * @param bInitial determines if initial
      * @param bFinal determines if acceptor
      */
-    public State(String name, Boolean bInitial, Boolean bFinal) {
+    public State(String name, boolean bInitial, boolean bFinal) {
         this.name = name;
         this.bInitial = bInitial;
         this.bFinal = bFinal;
+        this.transitions= new ArrayList<Transition>();
+    }
+
+    public State(String name) {
+        this.name = name;
         this.transitions= new ArrayList<Transition>();
     }
 
@@ -55,13 +60,14 @@ public class State {
 
     /**
      * For Display: String info of all transitions from current state to other destination states
-     * 
-     * Note: I separated this from toString to avoid information overload 
+     *
+     * Note: I separated this from toString to avoid information overload
      * while having the option to display the  transitions when needed.
-     * 
+     *
      * @return String info of all transitions from current state to other destination states
      */
     public String displayTransitions (){
+      System.out.println("Trying to display...");
         String out ="";
         int ctr = 0;
         for (Transition transition : transitions) {
@@ -78,7 +84,7 @@ public class State {
 
     /**
      * Adds new transition to the Transitions Arraylist
-     * 
+     *
      * @param dest destination state
      * @param input input needed to go to destination from source
      */
@@ -113,7 +119,7 @@ public class State {
      */
     public void replaceTransitions(String input, State dest) {
         for (Transition transition : transitions) {
-            if (transition.getInput().equals(input)) 
+            if (transition.getInput().equals(input))
             {
                 transitions.remove(transition);
             }
@@ -126,11 +132,11 @@ public class State {
         return this.name;
     }
 
-    public Boolean isBInitial() {
+    public boolean isBInitial() {
         return this.bInitial;
     }
 
-    public Boolean isBFinal() {
+    public boolean isBFinal() {
         return this.bFinal;
     }
 
@@ -141,7 +147,7 @@ public class State {
     public ArrayList<Transition> getTransitions(String input) {
         ArrayList<Transition> transList = new ArrayList<Transition>();
         for (Transition transition : transitions) {
-            if (transition.getInput().equals(input)) transList.add(transition)
+            if (transition.getInput().equals(input)) transList.add(transition);
         }
         return transList;
     }
@@ -158,22 +164,22 @@ public class State {
         if (transList.size() <= 0) return null;
 
         // Concats every string name at destination
-        for (Transition transition : transList) 
+        for (Transition transition : transList)
         {
             finalName.concat(transition.getDest().getName());
         }
         return finalName;
     }
-    
+
     // public void setName(String name) {
     //     this.name = name;
     // }
 
-    // public void setBInitial(Boolean bInitial) {
-    //     this.bInitial = bInitial;
-    // }
-    
-    public void setBFinal(Boolean bFinal) {
+    public void setBInitial(boolean bInitial) {
+        this.bInitial = bInitial;
+    }
+
+    public void setBFinal(boolean bFinal) {
         this.bFinal = bFinal;
     }
 
