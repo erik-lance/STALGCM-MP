@@ -1,11 +1,7 @@
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Fixer {
-    private String name;
-    private ArrayList<State> states;
-
 
     public boolean isEquivalent(Machine m1, Machine m2) {
         // Reference to states
@@ -15,10 +11,6 @@ public class Fixer {
         ArrayList<State> newStates = new ArrayList<State>();
         State initState1 = m1.getInitialState();
         State initState2 = m2.getInitialState();
-
-
-        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","K","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-        int alphCounter = 0;
 
         // CREATES A STORE STATE
         ArrayList<State> storageStates = new ArrayList<State>();
