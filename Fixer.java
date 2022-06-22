@@ -6,6 +6,127 @@ public class Fixer {
     private String name;
     private ArrayList<State> states;
 
+
+    public boolean isEquivalent(Machine m1, Machine m2) {
+        // Reference to states
+        ArrayList<State> mStates1 = m1.getStates();
+        ArrayList<State> mStates2 = m2.getStates();
+
+        ArrayList<State> newStates = new ArrayList<State>();
+        State initState1 = m1.getInitialState();
+        State initState2 = m2.getInitialState();
+
+
+        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","K","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+        int alphCounter = 0;
+
+        // CREATES A STORE STATE
+        ArrayList<State> storageStates = new ArrayList<State>();
+
+        //Machine 1 Cloning
+        for (State state : mStates1) {
+            storageStates.add(new State(state));
+        }
+
+        // Deep Clones Transitions
+        for (int i = 0; i < mStates1.size(); i++) 
+        {
+            for (Transition trSt : mStates1.get(i).getTransitions()) 
+            {
+                for (State storStat : storageStates) 
+                {
+                    if (trSt.getDest().equals(storStat)) 
+                    {
+                        storageStates.get(i).makeTransition(storStat, trSt.getInput());
+                        break;
+                    }
+                }        
+            }
+        }
+
+        //Machine 2 Cloning
+        for (State state : mStates2) {
+            storageStates.add(new State(state));
+        }
+
+        // Deep Clones Transitions
+        for (int i = 0; i < mStates2.size(); i++) 
+        {
+            for (Transition trSt : mStates2.get(i).getTransitions()) 
+            {
+                for (State storStat : storageStates) 
+                {
+                    if (trSt.getDest().equals(storStat)) 
+                    {
+                        storageStates.get(i).makeTransition(storStat, trSt.getInput());
+                        break;
+                    }
+                }        
+            }
+        }
+
+        // ------ STATES COMPLETE; PARTITION STARTS HERE ------  //
+        ArrayList<ArrayList<State>> partitionGroup = new ArrayList<ArrayList<State>>();
+        partitionGroup.add(new ArrayList<State>());
+
+        // Adds finals to group 0, and nonfinals to group 1
+        for (State state : storageStates) {
+            if (state.isBFinal())
+            {
+                partitionGroup.get(0).add(state);
+            }
+        }
+
+        for (State state : storageStates) {
+            if (!state.isBFinal())
+            {
+                partitionGroup.get(1).add(state);
+            }
+        }
+
+        boolean expandable = true;
+        // Checks if equivalent
+        if (checkGroupInitials(partitionGroup, initState1, initState2)) 
+        {
+            while (expandable) {
+                ArrayList<ArrayList<State>> newGroup = new ArrayList<ArrayList<State>>();
+                newGroup = expandOnce(partitionGroup, m1.getInputs());
+
+                if (newGroup != null) {
+                    partitionGroup = newGroup;
+                }
+                else {
+                    if (checkGroupInitials(newGroup, initState1, initState1)) 
+                    {
+                        return true;
+                    }
+                    else return false;
+                }
+
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean checkGroupInitials(ArrayList<ArrayList<State>> pGroup, State s1, State s2) {
+        int counter = 0;
+        for (ArrayList<State> group : pGroup)
+        {
+            for (State state : group) 
+            {
+                if (state.equals(s1)) counter++;
+                else if (state.equals(s2)) counter++;
+            }
+
+            if (counter == 1) return false;
+            else if (counter == 2) return true;
+        }
+        return false;
+    }
+
+
     public Machine convertToDFA(Machine m) {
 
         // Reference to states
