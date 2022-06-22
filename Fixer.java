@@ -105,9 +105,7 @@ public class Fixer {
 
             }
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     public boolean checkGroupInitials(ArrayList<ArrayList<State>> pGroup, State s1, State s2) {
