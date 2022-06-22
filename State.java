@@ -67,7 +67,6 @@ public class State {
      * @return String info of all transitions from current state to other destination states
      */
     public String displayTransitions (){
-      System.out.println("Trying to display...");
         String out ="";
         int ctr = 0;
         for (Transition transition : transitions) {

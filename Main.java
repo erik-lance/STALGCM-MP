@@ -20,7 +20,7 @@ public class Main {
 
         String input, mName, mInitial, mTrans, mState, mFinal;
         int numMachines, nStates, nInputs, nTrans, nFinals;
-        int i, j, k, l, m, n, o;
+        int i, j, k, l, m, n, o, p;
 
         BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
 
@@ -107,7 +107,14 @@ public class Main {
         }
         for (o = 0; o < allStates.size(); o++){
           System.out.println(allStates.get(o));
-          System.out.println(allStates.get(o).displayTransitions());
+          State currState = allStates.get(o);
+          // System.out.println(currState.getTransitions().size());
+          // System.out.println(allStates.get(o).displayTransitions());
+          for (p = 0; p < currState.getTransitions().size(); p++){
+            System.out.println(currState.getTransitions().get(p));
+            // System.out.println(allStates.get(o).displayTransitions());
+
+          }
         }
       }
     }
