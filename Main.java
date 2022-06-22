@@ -17,10 +17,11 @@ public class Main {
         //True if phase 1, false if phase 2
         boolean bPhase = true;
         ArrayList<Machine> machine = new ArrayList<Machine>();
-
+        boolean bEquivalent;
         String input, mName, mInitial, mTrans, mState, mFinal;
         int numMachines, nStates, nInputs, nTrans, nFinals;
         int i, j, k, l, m, n, o, p;
+        Fixer fix = new Fixer();
 
         BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
 
@@ -116,6 +117,15 @@ public class Main {
 
           }
         }
+
+        machine.get(i).setStates(allStates);
+        machine.get(i).setInputs(allInputs);
       }
+
+      bEquivalent = fix.isEquivalent(machine.get(0), machine.get(1));
+      if (bEquivalent)
+        System.out.println("equivalent");
+      else
+        System.out.println("not equivalent");
     }
 }
