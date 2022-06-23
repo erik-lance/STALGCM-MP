@@ -102,30 +102,33 @@ public class Main {
         }
 
         //prints!
-        System.out.println("Machine Name: " + mName);
-        for (o = 0; o < allInputs.size(); o++){
-          System.out.println("Input: " + allInputs.get(o));
-        }
-        for (o = 0; o < allStates.size(); o++){
-          System.out.println(allStates.get(o));
-          State currState = allStates.get(o);
-          // System.out.println(currState.getTransitions().size());
-          // System.out.println(allStates.get(o).displayTransitions());
-          for (p = 0; p < currState.getTransitions().size(); p++){
-            System.out.println(currState.getTransitions().get(p));
-            // System.out.println(allStates.get(o).displayTransitions());
-
-          }
-        }
+        //System.out.println("Machine Name: " + mName);
+        //for (o = 0; o < allInputs.size(); o++){
+        //  System.out.println("Input: " + allInputs.get(o));
+        //}
+        //for (o = 0; o < allStates.size(); o++){
+        //  System.out.println(allStates.get(o));
+        //  State currState = allStates.get(o);
+        //  // System.out.println(currState.getTransitions().size());
+        //  // System.out.println(allStates.get(o).displayTransitions());
+        //  for (p = 0; p < currState.getTransitions().size(); p++){
+        //    System.out.println(currState.getTransitions().get(p));
+        //    // System.out.println(allStates.get(o).displayTransitions());
+        //
+        //  }
+        //}
 
         machine.get(i).setStates(allStates);
         machine.get(i).setInputs(allInputs);
+
+        // prints machine for debugging purposes - TO COMMENT OUT later
+        View.machinePrint(machine.get(i));
       }
 
-      bEquivalent = fix.isEquivalent(machine.get(0), machine.get(1));
-      if (bEquivalent)
-        System.out.println("equivalent");
-      else
-        System.out.println("not equivalent");
+      if(bPhase) View.phase1Print(fix.isEquivalent(machine.get(0), machine.get(1)));
+      // else View.phase2Print(arrEquivalent);
+
+      // after using View class, use .flush() to close buffered writer
+      View.out.flush();
     }
 }

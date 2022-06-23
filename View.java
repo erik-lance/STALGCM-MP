@@ -29,6 +29,7 @@ public class View {
     public static void phase2Print(ArrayList<Machine> arrEquivalent) {
         try {
             out.write(arrEquivalent.size() + "\n");
+            // lexicographically sorts arrEquivalent based on machine names
             Collections.sort(arrEquivalent, new Comparator<Machine>() {
                 @Override
                 public int compare(Machine m1, Machine m2) {
@@ -36,6 +37,33 @@ public class View {
                 }
             });
             for (Machine m : arrEquivalent) out.write(m.getName() + " ");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Prints a Machine instance for debugging purposes
+     * @param m a Machine to be printed when debugging
+     */
+    public static void machinePrint(Machine m) {
+        try {
+            int i, j;
+            State tempState;
+            out.write("Machine Name: " + m.getName() + "\nInputs:\n");
+            for (i = 0; i < m.getInputs().size(); i++) {
+                out.write(m.getInputs().get(i) + "\n");
+            }
+            out.write("States:\n");
+            for (i = 0; i < m.getStates().size(); i++) {
+                out.write(m.getStates().get(i).name);
+                tempState = m.getStates().get(i);
+                out.write("Transitions Size: " + tempState.getTransitions().size() + "\nTransitions:\n");
+                for (j = 0; j < tempState.getTransitions().size(); j++) {
+                    out.write(tempState.getTransitions().get(i).toString());
+                    //out.write(tempState.displayTransitions());
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
