@@ -167,9 +167,6 @@ public class State {
         }
 
         this.makeTransition(dest, input);
-
-        // System.out.println("After.");
-        // System.out.println(this.displayTransitionsSimple());
     }
 
     public String getName() {
@@ -185,13 +182,19 @@ public class State {
     }
 
     public ArrayList<Transition> getTransitions() {
+        if (this.transitions == null) return null;
+        if (this.transitions.size()  <= 0) return null;
         return this.transitions;
     }
 
     public ArrayList<Transition> getTransitions(String input) {
         ArrayList<Transition> transList = new ArrayList<Transition>();
-        for (Transition transition : transitions) {
-            if (transition.getInput().equals(input)) transList.add(transition);
+
+        if (transitions != null)
+        {
+            for (Transition transition : transitions) {
+                if (transition.getInput().equals(input)) transList.add(transition);
+            }
         }
         return transList;
     }
@@ -226,10 +229,4 @@ public class State {
     public void setBFinal(boolean bFinal) {
         this.bFinal = bFinal;
     }
-
-    // public void setTransitions(ArrayList<Transition> transitions) {
-    //     this.transitions = transitions;
-    // }
-
-
 }

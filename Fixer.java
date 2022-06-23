@@ -38,13 +38,6 @@ public class Fixer {
             if (state.isBInitial() && !state.equals(initState1)) initState2 = state;
         }
 
-        //TODO: remove these
-        // System.out.println("Initial:: ");
-        // printStateList(storageStates);
-
-        // System.out.println("Trans: ");
-        // printStateDets(storageStates);
-
         // ------ STATES COMPLETE; PARTITION STARTS HERE ------  //
         ArrayList<ArrayList<State>> partitionGroup = new ArrayList<ArrayList<State>>();
         partitionGroup.add(new ArrayList<State>());
@@ -67,37 +60,14 @@ public class Fixer {
 
         boolean expandable = true;
 
-        int ctr = 0;
 
         // Checks if equivalent
         if (checkGroupInitials(partitionGroup))
         {
             while (expandable) {
-                // for (ArrayList<State> ppGroup : partitionGroup)
-                // {
-                //     System.out.println("TEST: "+ctr);
-                //     for (State pppGroup : ppGroup)
-                //     {
-                //         System.out.println(pppGroup.toString());
-                //     }
-                // }
-
-
                 ArrayList<ArrayList<State>> newGroup = new ArrayList<ArrayList<State>>();
                 newGroup = expandOnce(partitionGroup, m1.getInputs());
 
-                // For printing
-                // if (newGroup != null)
-                // {
-                //     for (ArrayList<State> gg : newGroup)
-                //     {
-                //         System.out.println("TEST2: "+ctr);
-                //         for (State sss : gg)
-                //         {
-                //             System.out.println(sss.toString());
-                //         }
-                //     }
-                // }
 
 
                 if (newGroup != null) {
@@ -275,6 +245,7 @@ public class Fixer {
 
                                 // in This inner loop, we check for their transitions (C -> B) && (D -> E)
                                 // System.out.println("We're looking at the transitions of "+trans.getDest().getName());
+                                if (trans.getDest().getTransitions() == null) continue;
                                 for (Transition innerTrans : trans.getDest().getTransitions())
                                 {
                                     // We simply made a transition to the same destination as the states it's copying.
@@ -609,6 +580,7 @@ public class Fixer {
         for (int i = 0; i < group.size(); i++)
         {
             // Checks for each transition available in selected state from original group
+            if (group.get(i).getTransitions() ==  null) continue;
             for (Transition trSt : group.get(i).getTransitions())
             {
                 // Loops through each state in the clone array for a state with the same name as the destination.
