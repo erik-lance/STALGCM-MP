@@ -51,18 +51,24 @@ public class Main {
         m2States.add(new State("C", false, false));
 
         // A trans
-        m2States.get(0).makeTransition(m1States.get(0), "0");
-        m2States.get(0).makeTransition(m1States.get(1), "1");
+        m2States.get(0).makeTransition(m2States.get(0), "0");
+        m2States.get(0).makeTransition(m2States.get(1), "1");
 
         // B trans
-        m2States.get(1).makeTransition(m1States.get(2), "0");
-        m2States.get(1).makeTransition(m1States.get(1), "1");
+        m2States.get(1).makeTransition(m2States.get(2), "0");
+        m2States.get(1).makeTransition(m2States.get(1), "1");
         
         // C trans
-        m2States.get(2).makeTransition(m1States.get(0), "0");
-        m2States.get(2).makeTransition(m1States.get(1), "1");
+        m2States.get(2).makeTransition(m2States.get(0), "0");
+        m2States.get(2).makeTransition(m2States.get(1), "1");
 
         secondM.setStates(m2States);
+
+        ArrayList<String> in = new ArrayList<String>();
+        in.add("0");
+        in.add("1");
+        firstM.setInputs(in);
+        secondM.setInputs(in);
 
         View.phase1Print(fix.isEquivalent(firstM, secondM));
 
