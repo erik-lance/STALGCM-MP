@@ -167,7 +167,7 @@ public class Fixer {
 
 
         /* --------------- Dead State Code --------------- */
-        State deadState = new State("_deadState", false, false);
+        State deadState = new State("_dd", false, false);
         boolean isDeadHere = false;
 
         for (String input : m.getInputs()) 
@@ -183,6 +183,10 @@ public class Fixer {
 
         // Stops once machine finds there is no more to add
         while (cur_state != null) {
+            System.out.println("Current Stack: ");
+            System.out.println(stateStack+"\n\n");
+
+            System.out.println("We're converting.. Now at: "+cur_state.getName());
             // Checks each input of said machine
             for (String input : m.getInputs()) 
             {
@@ -192,7 +196,9 @@ public class Fixer {
                 State possibleCurList = doesStateExist(newName, expanded);
 
                 // Upon empty transitions at said input, connect cur_state to dead state
-                if (newName == null) {
+                if (newName == null) 
+                {
+                    System.out.println("Look dead state found! at "+cur_state.getName());
 
                     // Adds dead state to list since it exists
                     if (!isDeadHere)
@@ -204,77 +210,103 @@ public class Fixer {
                     // Sets empty transition to transition to this dead state instead
                     cur_state.makeTransition(deadState, input);
 
-                    break;
+                    // break;
                 }
-
-                // Checks if the cur_state is transitioning to a state that already exists
-                if (possibleState != null) 
+                else 
                 {
-                    // Since we have a reference to this in the original table already
-                    // there is NO need to do anything.
-
-                    // Check if it's in the new expanded list before adding.
-                    if (possibleCurList == null) 
+                    // Checks if the cur_state is transitioning to a state that already exists
+                    if (possibleState != null) 
                     {
-                        expanded.add(possibleState);
-                        stateStack.add(possibleState);
-                    }
+                        System.out.println("Found state in orig list! for "+possibleState.getName());
+                        // Since we have a reference to this in the original table already
+                        // there is NO need to do anything.
 
-                    // If this is an NFA connection (A->B) && (A->C),
-                    // replace transition to existing combined state.
-                    if (cur_state.getTransitions(input).size() > 1) {
-                        // (Connects it to the reference in the new list.
-                        // Since it's dynamic, it makes no  difference if
-                        // it's in the new or old list)
-                        cur_state.replaceTransitions(input, possibleCurList);
-
-                        /* What's happening:
-                         * cur_state's transition to input X is already an existing state.
-                         * however, this is actually an NFA connection (because we were looking at A -> ['B','C'])
-                         * so it replaces those separate transitions into a complete transition to an existing "BC" state.
-                         * it should exist because possibleState isn't null.
-                         */
-                    }
-                    break;
-                }
-                else
-                {
-                    // We found a NFA input. We will add every transition this way.
-                    // Set final later.
-                    State createState = new State(newName, false, false);
-
-                    // Add transitions to new state at X input.
-                    // This will add transitions for all inputs.
-
-                    //e.g. First grab A's transitions (A-> C) && (A -> D)
-                    for (Transition trans : cur_state.getTransitions(input)) 
-                    {
-                        // Since one of the states are final, the new state is final.
-                        if (trans.getDest().isBFinal()) createState.setBFinal(true);
-
-                        // in This inner loop, we check for their transitions (C -> B) && (D -> E)
-                        for (Transition innerTrans : trans.getDest().getTransitions()) 
+                        // Check if it's in the new expanded list before adding.
+                        if (possibleCurList == null) 
                         {
-                            // We simply made a transition to the same destination as the states it's copying.
-                            /* e.g.: We have A -> BC
-                             * BC's transitions = B.trans + C.trans
-                             * new state "BC".transitions = makeTransition(B.trans); and for C as well.
-                             */
-                            createState.makeTransition(innerTrans.getDest(), innerTrans.getInput());
+                            System.out.println("Adding directly to list! "+possibleState.getName());
+                            expanded.add(possibleState);
+                            stateStack.add(possibleState);
+                        }
+
+                        // If this is an NFA connection (A->B) && (A->C),
+                        // replace transition to existing combined state.
+                        if (cur_state.getTransitions(input).size() > 1) 
+                        {
+                            System.out.print("Normalizing a transition! Of "+cur_state.getName()+" to a certain "+newName);
+                            // (Connects it to the reference in the new list.
+                            // Since it's dynamic, it makes no  difference if
+                            // it's in the new or old list)
+                            cur_state.replaceTransitions(input, possibleCurList);
+
+                            /* What's happening:
+                            * cur_state's transition to input X is already an existing state.
+                            * however, this is actually an NFA connection (because we were looking at A -> ['B','C'])
+                            * so it replaces those separate transitions into a complete transition to an existing "BC" state.
+                            * it should exist because possibleState isn't null.
+                            */
+                        }
+                        else 
+                        {
+
                         }
                     }
+                    else
+                    {
+                        // We found a NFA input. We will add every transition this way.
+                        // Set final later.
 
+                        System.out.println("NFA transition at "+cur_state.getName());
 
-                    // Since the state is now complete, we add its index
-                    // and we add it to the main list as an official state.
-                    storageStates.add(createState);
-                    stateStack.add(createState);
+                        State createState = new State(newName, false, false);
 
-                    expanded.add(createState);
+                        // Add transitions to new state at X input.
+                        // This will add transitions for all inputs.
 
-                    // make original state connect to new state instead.
-                    cur_state.replaceTransitions(input, createState);
+                        //e.g. First grab A's transitions (A-> C) && (A -> D)
+                        // and THEN grabe the other's
+
+                            System.out.println("Let's make for: "+input);
+                            // For each transition under a certain input
+                            for (Transition trans : cur_state.getTransitions(input)) 
+                            {
+                                // Since one of the states are final, the new state is final.
+                                if (trans.getDest().isBFinal()) createState.setBFinal(true);
+
+                                // in This inner loop, we check for their transitions (C -> B) && (D -> E)
+                                System.out.println("We're looking at the transitions of "+trans.getDest().getName());
+                                for (Transition innerTrans : trans.getDest().getTransitions()) 
+                                {
+                                    // We simply made a transition to the same destination as the states it's copying.
+                                    /* e.g.: We have A -> BC
+                                    * BC's transitions = B.trans + C.trans
+                                    * new state "BC".transitions = makeTransition(B.trans); and for C as well.
+                                    */
+                                    System.out.println("Let's go here!: "+createState.getName()+" at "+innerTrans.getInput()+" to: "+innerTrans.getDest().getName());
+                                    createState.makeTransition(innerTrans.getDest(), innerTrans.getInput());
+                                }
+                            } 
+                        
+                        
+                        System.out.println("New NFA state acquired! "+createState.getName());
+                        System.out.println("State Details:\n"+createState.displayTransitionsSimple());
+
+                        // To remove duplicates.
+                        createState.normalizeTransitions(m.getInputs());
+
+                        // Since the state is now complete, we add its index
+                        // and we add it to the main list as an official state.
+                        storageStates.add(createState);
+                        stateStack.add(createState);
+
+                        expanded.add(createState);
+
+                        // make original state connect to new state instead.
+                        cur_state.replaceTransitions(input, createState);
+                    }
                 }
+
+                
                 
             }
             // changes cur_state to whatever is in queue
@@ -289,10 +321,12 @@ public class Fixer {
             System.out.println(state.toString());
         }
 
+        printStateDets(expanded);
+
         // Create machine Here
         Machine newMachine = new Machine(m.getName(), m.getTransitionNum());
         newMachine.setInputs(m.getInputs());
-        newMachine.cloneStates(expanded);
+        newMachine.setStates(expanded);
 
 
         // REDUCE HERE
@@ -316,7 +350,9 @@ public class Fixer {
         // based on their "group" number.
 
         // E.g. :Group 0, State 0
-    ArrayList<ArrayList<State>> partitions = new ArrayList<ArrayList<State>>();
+        ArrayList<ArrayList<State>> partitions = new ArrayList<ArrayList<State>>();
+        partitions.add(new ArrayList<State>());
+        
 
 
         // Initial Partitioning
@@ -333,6 +369,9 @@ public class Fixer {
             // No final states, therefore this machine is invalid.
             if (i == 0) return null;
         }
+
+        // In case there are no rejectors.
+        if (partitions.get(0).size() != m.getStates().size()) partitions.add(new ArrayList<State>());
 
         // Get all non-end states. (Can't be subjected to else state above in case there is no end state yet)
         for (State mState : m.getStates()) {
@@ -537,10 +576,25 @@ public class Fixer {
     }
 
     public State doesStateExist(String s, ArrayList<State> group) {
+        if (s == null) return null;
+
+        System.out.println("Let's find "+s);
         for (State state : group) 
         {
-            if (s.equals(state.getName())) return state;
+            char[] content = state.getName().toCharArray();
+            java.util.Arrays.sort(content);
+            String sorted = new String(content);
+
+            content = s.toCharArray();
+            java.util.Arrays.sort(content);
+            String sorted2 = new String(content);
+
+            if (sorted.equals(sorted2)) return state;
+            // if (state.getName().contains(s)) return state;
         }
+
+        System.out.println(s+" does not exist yet\n\n");
+
         return null;
     }
 
