@@ -105,7 +105,7 @@ public class State {
             for (Transition t : transitions) 
             {
                 if (t.getInput().equals(input) && t.getDest().equals(dest)) {
-                    System.out.println("\n\n [MOST LIKELY NFA PRINT] found a transition to the same destination. Ignoring . . . \n\n");
+                    // System.out.println("\n\n [MOST LIKELY NFA PRINT] found a transition to the same destination. Ignoring . . . \n\n");
                     safe = false;
                     break;
                 }
@@ -137,8 +137,8 @@ public class State {
 
                     if (t.getDest().getName().contains(t2.getDest().getName()))
                     {
-                        System.out.println("Removing: "+t2.getDest().getName());
-                        System.out.println("Because: "+t.getDest().getName());
+                        // System.out.println("Removing: "+t2.getDest().getName());
+                        // System.out.println("Because: "+t.getDest().getName());
                         transitions.remove(t2);
                         j--;
                     }
@@ -155,8 +155,8 @@ public class State {
      */
     public void replaceTransitions(String input, State dest) {
 
-        System.out.println("Replacing transitions.");
-        System.out.println(this.displayTransitionsSimple());
+        // System.out.println("Replacing transitions.");
+        // System.out.println(this.displayTransitionsSimple());
 
         for (int i = 0; i < transitions.size(); i++) {
             if (transitions.get(i).getInput().equals(input))
@@ -168,8 +168,8 @@ public class State {
 
         this.makeTransition(dest, input);
 
-        System.out.println("After.");
-        System.out.println(this.displayTransitionsSimple());
+        // System.out.println("After.");
+        // System.out.println(this.displayTransitionsSimple());
     }
 
     public String getName() {

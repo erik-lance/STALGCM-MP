@@ -183,10 +183,10 @@ public class Fixer {
 
         // Stops once machine finds there is no more to add
         while (cur_state != null) {
-            System.out.println("Current Stack: ");
-            System.out.println(stateStack+"\n\n");
+            // System.out.println("Current Stack: ");
+            // System.out.println(stateStack+"\n\n");
 
-            System.out.println("We're converting.. Now at: "+cur_state.getName());
+            // System.out.println("We're converting.. Now at: "+cur_state.getName());
             // Checks each input of said machine
             for (String input : m.getInputs()) 
             {
@@ -198,7 +198,7 @@ public class Fixer {
                 // Upon empty transitions at said input, connect cur_state to dead state
                 if (newName == null) 
                 {
-                    System.out.println("Look dead state found! at "+cur_state.getName());
+                    // System.out.println("Look dead state found! at "+cur_state.getName());
 
                     // Adds dead state to list since it exists
                     if (!isDeadHere)
@@ -217,14 +217,14 @@ public class Fixer {
                     // Checks if the cur_state is transitioning to a state that already exists
                     if (possibleState != null) 
                     {
-                        System.out.println("Found state in orig list! for "+possibleState.getName());
+                        // System.out.println("Found state in orig list! for "+possibleState.getName());
                         // Since we have a reference to this in the original table already
                         // there is NO need to do anything.
 
                         // Check if it's in the new expanded list before adding.
                         if (possibleCurList == null) 
                         {
-                            System.out.println("Adding directly to list! "+possibleState.getName());
+                            // System.out.println("Adding directly to list! "+possibleState.getName());
                             expanded.add(possibleState);
                             stateStack.add(possibleState);
                         }
@@ -233,7 +233,7 @@ public class Fixer {
                         // replace transition to existing combined state.
                         if (cur_state.getTransitions(input).size() > 1) 
                         {
-                            System.out.print("Normalizing a transition! Of "+cur_state.getName()+" to a certain "+newName);
+                            // System.out.print("Normalizing a transition! Of "+cur_state.getName()+" to a certain "+newName);
                             // (Connects it to the reference in the new list.
                             // Since it's dynamic, it makes no  difference if
                             // it's in the new or old list)
@@ -256,7 +256,7 @@ public class Fixer {
                         // We found a NFA input. We will add every transition this way.
                         // Set final later.
 
-                        System.out.println("NFA transition at "+cur_state.getName());
+                        // System.out.println("NFA transition at "+cur_state.getName());
 
                         State createState = new State(newName, false, false);
 
@@ -266,7 +266,7 @@ public class Fixer {
                         //e.g. First grab A's transitions (A-> C) && (A -> D)
                         // and THEN grabe the other's
 
-                            System.out.println("Let's make for: "+input);
+                            // System.out.println("Let's make for: "+input);
                             // For each transition under a certain input
                             for (Transition trans : cur_state.getTransitions(input)) 
                             {
@@ -274,7 +274,7 @@ public class Fixer {
                                 if (trans.getDest().isBFinal()) createState.setBFinal(true);
 
                                 // in This inner loop, we check for their transitions (C -> B) && (D -> E)
-                                System.out.println("We're looking at the transitions of "+trans.getDest().getName());
+                                // System.out.println("We're looking at the transitions of "+trans.getDest().getName());
                                 for (Transition innerTrans : trans.getDest().getTransitions()) 
                                 {
                                     // We simply made a transition to the same destination as the states it's copying.
@@ -282,14 +282,14 @@ public class Fixer {
                                     * BC's transitions = B.trans + C.trans
                                     * new state "BC".transitions = makeTransition(B.trans); and for C as well.
                                     */
-                                    System.out.println("Let's go here!: "+createState.getName()+" at "+innerTrans.getInput()+" to: "+innerTrans.getDest().getName());
+                                    // System.out.println("Let's go here!: "+createState.getName()+" at "+innerTrans.getInput()+" to: "+innerTrans.getDest().getName());
                                     createState.makeTransition(innerTrans.getDest(), innerTrans.getInput());
                                 }
                             } 
                         
                         
-                        System.out.println("New NFA state acquired! "+createState.getName());
-                        System.out.println("State Details:\n"+createState.displayTransitionsSimple());
+                        // System.out.println("New NFA state acquired! "+createState.getName());
+                        // System.out.println("State Details:\n"+createState.displayTransitionsSimple());
 
                         // To remove duplicates.
                         createState.normalizeTransitions(m.getInputs());
@@ -405,7 +405,7 @@ public class Fixer {
         /* ----- State Reduction ----- */
 
         //TODO: DELETE
-        System.out.println("We are now at state reduction!");
+        // System.out.println("We are now at state reduction!");
 
         ArrayList<State> finalPartition = reduceAndConnect(newPartition,m.getInputs());
 
@@ -578,7 +578,7 @@ public class Fixer {
     public State doesStateExist(String s, ArrayList<State> group) {
         if (s == null) return null;
 
-        System.out.println("Let's find "+s);
+        // System.out.println("Let's find "+s);
         for (State state : group) 
         {
             char[] content = state.getName().toCharArray();
@@ -593,7 +593,7 @@ public class Fixer {
             // if (state.getName().contains(s)) return state;
         }
 
-        System.out.println(s+" does not exist yet\n\n");
+        // System.out.println(s+" does not exist yet\n\n");
 
         return null;
     }
