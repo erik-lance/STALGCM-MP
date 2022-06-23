@@ -123,9 +123,27 @@ public class State {
     /**
      * This is for when transitions added to this state are obviously someone else's.
      */
-    public void normalizeTransitions() {
-        for (Transition trans : transitions) {
-            trans.setSource(this);
+    public void normalizeTransitions(ArrayList<String> inputs) {
+        for (String in : inputs) 
+        {
+            // Compare destinations under a certain input
+            for (Transition t : getTransitions(in)) 
+            {
+                for (int j = 0; j < getTransitions(in).size(); j++)    
+                {
+                    Transition t2 = getTransitions(in).get(j);
+
+                    if (t.equals(t2)) continue;
+
+                    if (t.getDest().getName().contains(t2.getDest().getName()))
+                    {
+                        System.out.println("Removing: "+t2.getDest().getName());
+                        System.out.println("Because: "+t.getDest().getName());
+                        transitions.remove(t2);
+                        j--;
+                    }
+                }
+            }
         }
     }
 
@@ -136,14 +154,22 @@ public class State {
      * @param dest string to transition to
      */
     public void replaceTransitions(String input, State dest) {
-        for (Transition transition : transitions) {
-            if (transition.getInput().equals(input))
+
+        System.out.println("Replacing transitions.");
+        System.out.println(this.displayTransitionsSimple());
+
+        for (int i = 0; i < transitions.size(); i++) {
+            if (transitions.get(i).getInput().equals(input))
             {
-                transitions.remove(transition);
+                transitions.remove(transitions.get(i));
+                i--;
             }
         }
 
         this.makeTransition(dest, input);
+
+        System.out.println("After.");
+        System.out.println(this.displayTransitionsSimple());
     }
 
     public String getName() {
@@ -184,7 +210,7 @@ public class State {
         // Concats every string name at destination
         for (Transition transition : transList)
         {
-            finalName.concat(transition.getDest().getName());
+            finalName = finalName.concat(transition.getDest().getName());
         }
         return finalName;
     }
