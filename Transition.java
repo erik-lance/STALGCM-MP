@@ -54,7 +54,7 @@ public class Transition {
         return  "{"+ strSource +
                 "input: " + this.input + "\n" +
                 strDest +
-                "}";
+                "}\n";
     }
 
     public String simpleString() {

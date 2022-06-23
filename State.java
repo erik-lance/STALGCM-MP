@@ -75,7 +75,7 @@ public class State {
         int ctr = 0;
         for (Transition transition : transitions) {
             out= out.concat  (
-                            "Transition# " + ctr +"\n" +
+                            "\nTransition# " + ctr +"\n" +
                             transition.toString()
                             +"\n"
                         );
@@ -100,9 +100,9 @@ public class State {
      */
     public void makeTransition (State dest, String input){
         boolean safe = true;
-        if (transitions != null) 
+        if (transitions != null)
         {
-            for (Transition t : transitions) 
+            for (Transition t : transitions)
             {
                 if (t.getInput().equals(input) && t.getDest().equals(dest)) {
                     // System.out.println("\n\n [MOST LIKELY NFA PRINT] found a transition to the same destination. Ignoring . . . \n\n");
@@ -112,7 +112,7 @@ public class State {
             }
         }
         else {transitions = new ArrayList<Transition>();}
-        
+
         // System.out.println("Is it safe?: "+safe);
         // Makes it so that it only adds the transition IF it is not a duplicate.
         if (safe) transitions.add(new Transition(this, dest, input));
@@ -124,12 +124,12 @@ public class State {
      * This is for when transitions added to this state are obviously someone else's.
      */
     public void normalizeTransitions(ArrayList<String> inputs) {
-        for (String in : inputs) 
+        for (String in : inputs)
         {
             // Compare destinations under a certain input
-            for (Transition t : getTransitions(in)) 
+            for (Transition t : getTransitions(in))
             {
-                for (int j = 0; j < getTransitions(in).size(); j++)    
+                for (int j = 0; j < getTransitions(in).size(); j++)
                 {
                     Transition t2 = getTransitions(in).get(j);
 

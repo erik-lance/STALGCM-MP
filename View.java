@@ -50,7 +50,7 @@ public class View {
         try {
             int i, j;
             State tempState;
-            out.write("Machine Name: " + m.getName() + "\nInputs:\n");
+            out.write("\nMachine Name: " + m.getName() + "\nInputs:\n");
             for (i = 0; i < m.getInputs().size(); i++) {
                 out.write(m.getInputs().get(i) + "\n");
             }
@@ -58,9 +58,9 @@ public class View {
             for (i = 0; i < m.getStates().size(); i++) {
                 out.write(m.getStates().get(i).name);
                 tempState = m.getStates().get(i);
-                out.write("Transitions Size: " + tempState.getTransitions().size() + "\nTransitions:\n");
+                out.write("\nTransitions Size: " + tempState.getTransitions().size() + "\nTransitions:\n");
                 for (j = 0; j < tempState.getTransitions().size(); j++) {
-                    out.write(tempState.getTransitions().get(i).toString());
+                    out.write(tempState.getTransitions().get(j).toString());
                     //out.write(tempState.displayTransitions());
                 }
             }
