@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 public class View {
-    private static BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
+    public static BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
 
     /**
      * Prints "equivalent" if two NFAs are equal, otherwise prints "not equivalent".
@@ -16,7 +16,6 @@ public class View {
         try {
             String output = (bIsEqual == true) ? "equivalent\n" : "not equivalent\n";
             out.write(output);
-            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,7 +36,6 @@ public class View {
                 }
             });
             for (Machine m : arrEquivalent) out.write(m.getName() + " ");
-            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
