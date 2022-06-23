@@ -25,6 +25,51 @@ public class Main {
 
         BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
 
+        // ERIK TEST MACHINES
+        Machine firstM = new Machine("M1", 4);
+        ArrayList<State> m1States = new ArrayList<State>();
+        m1States.add(new State("A",true, false));
+        m1States.add(new State("B", false, true));
+
+        // A trans
+        m1States.get(0).makeTransition(m1States.get(0), "0");
+        m1States.get(0).makeTransition(m1States.get(1), "1");
+
+        // B trans
+        m1States.get(1).makeTransition(m1States.get(0), "0");
+        m1States.get(1).makeTransition(m1States.get(1), "1");
+
+        firstM.setStates(m1States);
+
+        // Machine 2
+        Machine secondM = new Machine("M2", 6);
+
+        
+        ArrayList<State> m2States = new ArrayList<State>();
+        m2States.add(new State("A", true, false));
+        m2States.add(new State("B", false, true));
+        m2States.add(new State("C", false, false));
+
+        // A trans
+        m2States.get(0).makeTransition(m1States.get(0), "0");
+        m2States.get(0).makeTransition(m1States.get(1), "1");
+
+        // B trans
+        m2States.get(1).makeTransition(m1States.get(2), "0");
+        m2States.get(1).makeTransition(m1States.get(1), "1");
+        
+        // C trans
+        m2States.get(2).makeTransition(m1States.get(0), "0");
+        m2States.get(2).makeTransition(m1States.get(1), "1");
+
+        secondM.setStates(m2States);
+
+        View.phase1Print(fix.isEquivalent(firstM, secondM));
+
+        /* ---- END OF TEST MACHINES ---- */
+
+      
+        /*
         if (bPhase){
           numMachines = 2;
         }
@@ -127,7 +172,7 @@ public class Main {
 
       if(bPhase) View.phase1Print(fix.isEquivalent(machine.get(0), machine.get(1)));
       // else View.phase2Print(arrEquivalent);
-
+      */
       // after using View class, use .flush() to close buffered writer
       View.out.flush();
     }
