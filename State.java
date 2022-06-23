@@ -30,8 +30,12 @@ public class State {
      * @param s
      * @return
      */
-    public boolean equals(State s) {
-        return this.name.equals(s.getName());
+    public boolean equals(String s) {
+        return this.name.equals(s);
+    }
+
+    public boolean strictlyEqual(State s) {
+        return this.equals(s);
     }
 
     /**
@@ -70,14 +74,21 @@ public class State {
         String out ="";
         int ctr = 0;
         for (Transition transition : transitions) {
-            out.concat  (
+            out= out.concat  (
                             "Transition# " + ctr +"\n" +
                             transition.toString()
                             +"\n"
                         );
             ctr++;
         }
+        return out;
+    }
 
+    public String displayTransitionsSimple() {
+        String out ="";
+        for (Transition transition : transitions) {
+            out = out.concat(transition.simpleString()+"\n");
+        }
         return out;
     }
 
@@ -89,16 +100,24 @@ public class State {
      */
     public void makeTransition (State dest, String input){
         boolean safe = true;
-        for (Transition t : transitions) {
-            if (t.getInput().equals(input) && t.getDest().equals(dest)) {
-                System.out.println("\n\n [MOST LIKELY NFA PRINT] found a transition to the same destination. Ignoring . . . \n\n");
-                safe = false;
-                break;
+        if (transitions != null) 
+        {
+            for (Transition t : transitions) 
+            {
+                if (t.getInput().equals(input) && t.getDest().equals(dest)) {
+                    System.out.println("\n\n [MOST LIKELY NFA PRINT] found a transition to the same destination. Ignoring . . . \n\n");
+                    safe = false;
+                    break;
+                }
             }
         }
-
+        else {transitions = new ArrayList<Transition>();}
+        
+        // System.out.println("Is it safe?: "+safe);
         // Makes it so that it only adds the transition IF it is not a duplicate.
         if (safe) transitions.add(new Transition(this, dest, input));
+        // System.out.println("Display!!!: "+this.displayTransitions());
+        // if (safe) System.out.println("Display?: "+this.transitions.get(0).toString());
     }
 
     /**
@@ -170,9 +189,9 @@ public class State {
         return finalName;
     }
 
-    // public void setName(String name) {
-    //     this.name = name;
-    // }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setBInitial(boolean bInitial) {
         this.bInitial = bInitial;
