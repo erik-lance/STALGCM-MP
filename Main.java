@@ -41,7 +41,7 @@ public class Main {
 
         firstM.setStates(m1States);
 
-        // Machine 2
+        // Machine 2 ------------------------------------------------
         Machine secondM = new Machine("M2", 6);
 
         
@@ -64,13 +64,40 @@ public class Main {
 
         secondM.setStates(m2States);
 
+        // Machine 3 ------------------------------------------------
+        Machine thirdM = new Machine("M3", 4);
+        ArrayList<State> m3States = new ArrayList<State>();
+        m3States.add(new State("A", true, true));
+        m3States.add(new State("B", false, true));
+        m3States.add(new State("C", false, false));
+
+        // A trans
+        m3States.get(0).makeTransition(m3States.get(0), "0");
+        m3States.get(0).makeTransition(m3States.get(1), "0");
+        m3States.get(0).makeTransition(m3States.get(2), "1");
+
+        // B trans
+        m3States.get(1).makeTransition(m3States.get(1), "0");
+        m3States.get(1).makeTransition(m3States.get(1), "1");
+        m3States.get(1).makeTransition(m3States.get(2), "1");
+        
+        // C trans
+        m3States.get(2).makeTransition(m3States.get(0), "1");
+        m3States.get(2).makeTransition(m3States.get(2), "1");
+
+        thirdM.setStates(m3States);
+
+        // ------------------------------------------------
         ArrayList<String> in = new ArrayList<String>();
         in.add("0");
         in.add("1");
         firstM.setInputs(in);
         secondM.setInputs(in);
+        thirdM.setInputs(in);
 
-        View.phase1Print(fix.isEquivalent(firstM, secondM));
+        Machine fixed = fix.convertToDFA(thirdM);
+
+        // View.phase1Print(fix.isEquivalent(firstM, secondM));
 
         /* ---- END OF TEST MACHINES ---- */
 
