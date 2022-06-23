@@ -200,9 +200,16 @@ public class Main {
         machine.get(i).setStates(allStates);
         // System.out.println("[2]");
         machine.get(i).setInputs(allInputs);
+
+        //check if NFA
+        if (!machine.get(i).isMDFA()){
+          // Machine mTemp = machine.get(i);
+          machine.set(i, fix.convertToDFA(machine.get(i)));
+        }
+
         // System.out.println("[3]");
         // prints machine for debugging purposes - TO COMMENT OUT later
-        View.machinePrint(machine.get(i));
+        // View.machinePrint(machine.get(i));
 
       }
 

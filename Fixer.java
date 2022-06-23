@@ -24,9 +24,9 @@ public class Fixer {
 
         // We want to rename the states properly to avoid mixups. This won't affect transitions since transitions
         // hold a "State" type. Their names should update automatically.
-        for (State state : storageStates) 
+        for (State state : storageStates)
         {
-            state.setName(alphabet[alphCounter]);    
+            state.setName(alphabet[alphCounter]);
             alphCounter++;
         }
 
@@ -70,16 +70,16 @@ public class Fixer {
         int ctr = 0;
 
         // Checks if equivalent
-        if (checkGroupInitials(partitionGroup)) 
+        if (checkGroupInitials(partitionGroup))
         {
             while (expandable) {
-                // for (ArrayList<State> ppGroup : partitionGroup) 
+                // for (ArrayList<State> ppGroup : partitionGroup)
                 // {
                 //     System.out.println("TEST: "+ctr);
-                //     for (State pppGroup : ppGroup) 
+                //     for (State pppGroup : ppGroup)
                 //     {
                 //         System.out.println(pppGroup.toString());
-                //     }    
+                //     }
                 // }
 
 
@@ -87,24 +87,24 @@ public class Fixer {
                 newGroup = expandOnce(partitionGroup, m1.getInputs());
 
                 // For printing
-                // if (newGroup != null) 
+                // if (newGroup != null)
                 // {
-                //     for (ArrayList<State> gg : newGroup) 
+                //     for (ArrayList<State> gg : newGroup)
                 //     {
                 //         System.out.println("TEST2: "+ctr);
-                //         for (State sss : gg) 
+                //         for (State sss : gg)
                 //         {
                 //             System.out.println(sss.toString());
-                //         }    
+                //         }
                 //     }
                 // }
-                
+
 
                 if (newGroup != null) {
                     partitionGroup = newGroup;
                 }
                 else {
-                    if (checkGroupInitials(partitionGroup)) 
+                    if (checkGroupInitials(partitionGroup))
                     {
                         return true;
                     }
@@ -125,7 +125,7 @@ public class Fixer {
         for (ArrayList<State> group : pGroup)
         {
             int counter = 0;
-            for (State state : group) 
+            for (State state : group)
             {
                 if(state.isBInitial()) counter++;
             }
@@ -146,13 +146,13 @@ public class Fixer {
         State initState = m.getInitialState();
 
         newStates.add(new State(initState));
-        
+
         // CREATES A STORE STATE
         ArrayList<State> storageStates = new ArrayList<State>();
         storageStates.addAll(deepCloneStates(mStates));
 
         for (State state : storageStates) {
-            if (state.isBInitial()) 
+            if (state.isBInitial())
             {
                 initState = state;
                 break;
@@ -170,7 +170,7 @@ public class Fixer {
         State deadState = new State("_dd", false, false);
         boolean isDeadHere = false;
 
-        for (String input : m.getInputs()) 
+        for (String input : m.getInputs())
         {
             deadState.makeTransition(deadState, input);
         }
@@ -188,7 +188,7 @@ public class Fixer {
 
             // System.out.println("We're converting.. Now at: "+cur_state.getName());
             // Checks each input of said machine
-            for (String input : m.getInputs()) 
+            for (String input : m.getInputs())
             {
                 // Checks first if this state already exists
                 String newName = cur_state.getTransitionString(input);
@@ -196,7 +196,7 @@ public class Fixer {
                 State possibleCurList = doesStateExist(newName, expanded);
 
                 // Upon empty transitions at said input, connect cur_state to dead state
-                if (newName == null) 
+                if (newName == null)
                 {
                     // System.out.println("Look dead state found! at "+cur_state.getName());
 
@@ -204,7 +204,7 @@ public class Fixer {
                     if (!isDeadHere)
                     {
                         isDeadHere = true;
-                        expanded.add(deadState);   
+                        expanded.add(deadState);
                     }
 
                     // Sets empty transition to transition to this dead state instead
@@ -212,17 +212,17 @@ public class Fixer {
 
                     // break;
                 }
-                else 
+                else
                 {
                     // Checks if the cur_state is transitioning to a state that already exists
-                    if (possibleState != null) 
+                    if (possibleState != null)
                     {
                         // System.out.println("Found state in orig list! for "+possibleState.getName());
                         // Since we have a reference to this in the original table already
                         // there is NO need to do anything.
 
                         // Check if it's in the new expanded list before adding.
-                        if (possibleCurList == null) 
+                        if (possibleCurList == null)
                         {
                             // System.out.println("Adding directly to list! "+possibleState.getName());
                             expanded.add(possibleState);
@@ -231,7 +231,7 @@ public class Fixer {
 
                         // If this is an NFA connection (A->B) && (A->C),
                         // replace transition to existing combined state.
-                        if (cur_state.getTransitions(input).size() > 1) 
+                        if (cur_state.getTransitions(input).size() > 1)
                         {
                             // System.out.print("Normalizing a transition! Of "+cur_state.getName()+" to a certain "+newName);
                             // (Connects it to the reference in the new list.
@@ -246,7 +246,7 @@ public class Fixer {
                             * it should exist because possibleState isn't null.
                             */
                         }
-                        else 
+                        else
                         {
 
                         }
@@ -268,14 +268,14 @@ public class Fixer {
 
                             // System.out.println("Let's make for: "+input);
                             // For each transition under a certain input
-                            for (Transition trans : cur_state.getTransitions(input)) 
+                            for (Transition trans : cur_state.getTransitions(input))
                             {
                                 // Since one of the states are final, the new state is final.
                                 if (trans.getDest().isBFinal()) createState.setBFinal(true);
 
                                 // in This inner loop, we check for their transitions (C -> B) && (D -> E)
                                 // System.out.println("We're looking at the transitions of "+trans.getDest().getName());
-                                for (Transition innerTrans : trans.getDest().getTransitions()) 
+                                for (Transition innerTrans : trans.getDest().getTransitions())
                                 {
                                     // We simply made a transition to the same destination as the states it's copying.
                                     /* e.g.: We have A -> BC
@@ -285,9 +285,9 @@ public class Fixer {
                                     // System.out.println("Let's go here!: "+createState.getName()+" at "+innerTrans.getInput()+" to: "+innerTrans.getDest().getName());
                                     createState.makeTransition(innerTrans.getDest(), innerTrans.getInput());
                                 }
-                            } 
-                        
-                        
+                            }
+
+
                         // System.out.println("New NFA state acquired! "+createState.getName());
                         // System.out.println("State Details:\n"+createState.displayTransitionsSimple());
 
@@ -306,8 +306,8 @@ public class Fixer {
                     }
                 }
 
-                
-                
+
+
             }
             // changes cur_state to whatever is in queue
             stateStack.remove(0);
@@ -315,13 +315,13 @@ public class Fixer {
             else cur_state = null;
         }
 
-        System.out.println("\n\nHI FIXER HERE, WE FIXED NFA TO DFA ! HERE'S MY RESULT:");
-        for (State state : expanded) {
-            System.out.println("\n"+state.getName());
-            System.out.println(state.toString());
-        }
-
-        printStateDets(expanded);
+        // System.out.println("\n\nHI FIXER HERE, WE FIXED NFA TO DFA ! HERE'S MY RESULT:");
+        // for (State state : expanded) {
+        //     System.out.println("\n"+state.getName());
+        //     System.out.println(state.toString());
+        // }
+        //
+        // printStateDets(expanded);
 
         // Create machine Here
         Machine newMachine = new Machine(m.getName(), m.getTransitionNum());
@@ -329,10 +329,10 @@ public class Fixer {
         newMachine.setStates(expanded);
 
 
-        // REDUCE HERE
-        Machine reduced = partitionAlgorithm(newMachine);
+        // // REDUCE HERE
+        // Machine reduced = partitionAlgorithm(newMachine);
 
-        return reduced;
+        return newMachine;
     }
 
 
@@ -352,7 +352,7 @@ public class Fixer {
         // E.g. :Group 0, State 0
         ArrayList<ArrayList<State>> partitions = new ArrayList<ArrayList<State>>();
         partitions.add(new ArrayList<State>());
-        
+
 
 
         // Initial Partitioning
@@ -381,7 +381,7 @@ public class Fixer {
             }
         }
 
-        
+
         /* ---------- Full Algorithm Section ---------- */
 
         // Loop that calls expandOnce until fully expanded.
@@ -390,7 +390,7 @@ public class Fixer {
         newPartition.addAll(partitions);
 
         while (dividable) {
-            
+
             ArrayList<ArrayList<State>> reduced = expandOnce(newPartition, m.inputs);
 
             newPartition = new ArrayList<ArrayList<State>>();
@@ -401,7 +401,7 @@ public class Fixer {
             // Haven't utilized the partition function to number each partition, for now ganito muna.
         }
 
-        
+
         /* ----- State Reduction ----- */
 
         //TODO: DELETE
@@ -429,16 +429,16 @@ public class Fixer {
         ArrayList<ArrayList<String>> stCode = new ArrayList<ArrayList<String>>();
 
         // For each group
-        for (int i = 0; i < pGroup.size(); i++) 
+        for (int i = 0; i < pGroup.size(); i++)
         {
             stCode.add(new ArrayList<String>());
             // For each state in group
-            for (int j = 0; j < pGroup.get(i).size(); j++) 
+            for (int j = 0; j < pGroup.get(i).size(); j++)
             {
                 String transitionCode ="";
 
                 // Checks each transition of found state to find their group code for each transition
-                for (Transition t : pGroup.get(i).get(j).getTransitions()) 
+                for (Transition t : pGroup.get(i).get(j).getTransitions())
                     transitionCode = transitionCode.concat(getDestGroup(pGroup, t.getDest()));
 
                 stCode.get(i).add(transitionCode);
@@ -447,21 +447,21 @@ public class Fixer {
 
         ArrayList<ArrayList<State>> expanded = new  ArrayList<ArrayList<State>>();
 
-        for (int i = 0; i < pGroup.size(); i++) 
+        for (int i = 0; i < pGroup.size(); i++)
         {
             // This makes it easier to collect only unique string transition values
-            HashSet<String> hasher = new HashSet<String>();           
+            HashSet<String> hasher = new HashSet<String>();
             for (String code : stCode.get(i)) {
                 hasher.add(code);
-            } 
+            }
 
-            if (hasher.size() > 1) 
+            if (hasher.size() > 1)
             {
                 //Separation goes here.
-                
-                
+
+
                 // Compare for each hashcode each state
-                for (String hash : hasher) 
+                for (String hash : hasher)
                 {
                     ArrayList<State> grouped = new ArrayList<State>();
                     expanded.add(new ArrayList<State>());
@@ -477,9 +477,9 @@ public class Fixer {
                     // from that index, therefore the index changes here.
                     expanded.get(expanded.size()-1).addAll(grouped);
                 }
-                
+
             }
-            else 
+            else
             {
                 // Fit states normally. Therefore just add them.
                 expanded.add(new ArrayList<State>());
@@ -487,14 +487,14 @@ public class Fixer {
             }
         }
 
-        for (ArrayList<State> gg : expanded) 
-        {
-            System.out.println("TEST3: ");
-            for (State sss : gg) 
-            {
-                System.out.println(sss.toString());
-            }    
-        }
+        // for (ArrayList<State> gg : expanded)
+        // {
+        //     System.out.println("TEST3: ");
+        //     for (State sss : gg)
+        //     {
+        //         System.out.println(sss.toString());
+        //     }
+        // }
 
         // Returns null if list is found to be the same as it was. Indicating that this was the last partition.
         if (pGroup.equals(expanded)) return null;
@@ -508,16 +508,16 @@ public class Fixer {
      * @return the string number of the group number.
      */
     public String getDestGroup(ArrayList<ArrayList<State>>pGroup, State dest) {
-        
+
         // Loops through each state of each group
         int groupNum = 0;
         for (ArrayList<State> stateGroup: pGroup) {
             for (State state : stateGroup) {
-                if (state.equals(dest)) 
+                if (state.equals(dest))
                 {
                     return String.valueOf(groupNum);
                 }
-                
+
             }
             groupNum++;
         }
@@ -531,16 +531,16 @@ public class Fixer {
         ArrayList<ArrayList<String>> stCode = new ArrayList<ArrayList<String>>();
 
         // For each group
-        for (int i = 0; i < s.size(); i++) 
+        for (int i = 0; i < s.size(); i++)
         {
             stCode.add(new ArrayList<String>());
             // Checks each transition of found state to find their group code for each transition
-            for (Transition t : s.get(i).get(0).getTransitions()) 
+            for (Transition t : s.get(i).get(0).getTransitions())
                 stCode.get(i).add(getDestGroup(s, t.getDest()));
         }
 
 
-        for (ArrayList<State> list : s) 
+        for (ArrayList<State> list : s)
         {
             State sampleState = list.get(0);
             states.add(new State(sampleState.getName(), sampleState.isBInitial(), sampleState.isBFinal()));
@@ -548,9 +548,9 @@ public class Fixer {
 
         // make Transition each state
         int i = 0;
-        for (State state : states) 
+        for (State state : states)
         {
-            for (int j = 0; j < inputs.size(); j++) 
+            for (int j = 0; j < inputs.size(); j++)
             {
                 // First  index is the actual state num, second is the transition num
                 int parse = Integer.parseInt(stCode.get(i).get(j));
@@ -568,7 +568,7 @@ public class Fixer {
      * @return said state, else null
      */
     public State doesStateExist(State s, ArrayList<State> group) {
-        for (State state : group) 
+        for (State state : group)
         {
             if (s.equals(state)) return state;
         }
@@ -579,7 +579,7 @@ public class Fixer {
         if (s == null) return null;
 
         // System.out.println("Let's find "+s);
-        for (State state : group) 
+        for (State state : group)
         {
             char[] content = state.getName().toCharArray();
             java.util.Arrays.sort(content);
@@ -606,21 +606,21 @@ public class Fixer {
         }
 
         // Deep Clones Transitions
-        for (int i = 0; i < group.size(); i++) 
+        for (int i = 0; i < group.size(); i++)
         {
             // Checks for each transition available in selected state from original group
-            for (Transition trSt : group.get(i).getTransitions()) 
+            for (Transition trSt : group.get(i).getTransitions())
             {
                 // Loops through each state in the clone array for a state with the same name as the destination.
-                for (State storStat : clone) 
+                for (State storStat : clone)
                 {
                     // If we found a dest state from the original group that is in the clone group, copy the transition.
-                    if (trSt.getDest().equals(storStat.getName())) 
+                    if (trSt.getDest().equals(storStat.getName()))
                     {
                         clone.get(i).makeTransition(storStat, trSt.getInput());
                         break;
                     }
-                }        
+                }
             }
         }
 

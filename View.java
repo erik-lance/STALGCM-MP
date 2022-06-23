@@ -59,10 +59,11 @@ public class View {
                 out.write(m.getStates().get(i).name);
                 tempState = m.getStates().get(i);
                 out.write("\nTransitions Size: " + tempState.getTransitions().size() + "\nTransitions:\n");
-                for (j = 0; j < tempState.getTransitions().size(); j++) {
-                    out.write(tempState.getTransitions().get(j).toString());
-                    //out.write(tempState.displayTransitions());
-                }
+                out.write(m.getStates().get(i).displayTransitionsSimple());
+                // for (j = 0; j < tempState.getTransitions().size(); j++) {
+                //     out.write(tempState.getTransitions().get(j).toString());
+                //     //out.write(tempState.displayTransitions());
+                // }
             }
         } catch (IOException e) {
             e.printStackTrace();
