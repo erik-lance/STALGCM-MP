@@ -39,13 +39,13 @@ public class Transition {
         // I did not include the transitions attribute
         // As I thought it might made it confusing
         //(I reserved it to be include in State toString)
-        String strSource =  " source: +"+
+        String strSource =  " source: --"+
                             "\n  name: " + source.getName() +
                             "\n  bInitial: "+ source.isBInitial()+
                             "\n  bFinal"+ source.isBFinal()+
                             "\n";
 
-        String strDest = " dest: "+
+        String strDest = " dest: --"+
                         "\n  name: " + dest.getName() +
                         "\n  bInitial: "+ dest.isBInitial()+
                         "\n  bFinal"+ dest.isBFinal()+
@@ -55,5 +55,9 @@ public class Transition {
                 "input: " + this.input + "\n" +
                 strDest +
                 "}";
+    }
+
+    public String simpleString() {
+        return (this.source.getName()+" "+this.input+" "+this.dest.getName());
     }
 }
