@@ -83,11 +83,15 @@ public class Machine {
     }
 
     public Boolean isMDFA (){
-        Boolean out = false;
-
-        // TO DO
-
-        return out;
+        for (State state : states) 
+        {
+            for (String t : inputs) 
+            {
+                if (state.getTransitions(t) != null && state.getTransitions(t).size() == 1) {}
+                else return false;
+            }
+        }
+        return true;
     }
 
     /**
