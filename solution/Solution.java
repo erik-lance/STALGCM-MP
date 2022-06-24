@@ -112,7 +112,7 @@ public class Solution {
         }
 
         String nothing;
-        if (i < numMachines)
+        if (i+1 < numMachines)
           nothing = buffer.readLine();
       }
 
@@ -146,13 +146,12 @@ public class Solution {
         }
 
         if (cluster.size() > 0){
-          //TEST PRINTS
+          // // TEST PRINTS
           // System.out.print("\nCluster: ");
           // for (int temp = 0; temp < cluster.size(); temp++){
           //   if (!cluster.get(temp).isEmpty())
           //     System.out.print(cluster.get(temp) + " ");
           // }
-          // System.out.println();
           mEquivalent.add(cluster);
         }
       }
