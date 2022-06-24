@@ -116,12 +116,8 @@ public class Solution {
           nothing = buffer.readLine();
       }
 
-      // ArrayList<Machine> mEquivalent = new ArrayList<Machine>;
-      // ArrayList<Machine> mNotEquivalent = new ArrayList<Machine>;
       ArrayList<ArrayList<String>> mEquivalent = new ArrayList<ArrayList<String>>();
       boolean checked = false;
-      // ArrayList<String> mEquivalent = new ArrayList<String>;
-      // String mEquivalent = "";
 
       for (int r = 0; r < machine.size(); r++){
         ArrayList<String> cluster = new ArrayList<String>();
@@ -133,24 +129,15 @@ public class Solution {
             for (int u = 0; u < mEquivalent.get(t).size(); u++){
               if (mEquivalent.get(t).get(u).equals(machine.get(r).getName()))
                 checked = true;
-              // System.out.println("\n" + mEquivalent.get(t).get(u) + " and " + machine.get(r).getName() + " : " + checked);
             }
 
           }
 
           //check if you're checking equivalence of the same machine
           if (!machine.get(r).equals(machine.get(s)) && !checked){
-            // System.out.println("\nYou are comparing " + machine.get(r).getName() + " and " + machine.get(s).getName());
-            // if (!cluster.contains(machine.get(r).getName()))
-            //   cluster.add(machine.get(r).getName());
             // compare r and s machines
             if (fix.isEquivalent(machine.get(r), machine.get(s))){
-              // System.out.println("**Equivalent");
               cluster.add(machine.get(s).getName());
-              // machine.remove(s);
-            }
-            else {
-              // System.out.println("**Not Equivalent");
             }
           }
           else if (!checked){
@@ -159,23 +146,24 @@ public class Solution {
         }
 
         if (cluster.size() > 0){
-          System.out.print("\nCluster: ");
-          for (int temp = 0; temp < cluster.size(); temp++){
-            if (!cluster.get(temp).isEmpty())
-              System.out.print(cluster.get(temp) + " ");
-          }
-          System.out.println();
+          //TEST PRINTS
+          // System.out.print("\nCluster: ");
+          // for (int temp = 0; temp < cluster.size(); temp++){
+          //   if (!cluster.get(temp).isEmpty())
+          //     System.out.print(cluster.get(temp) + " ");
+          // }
+          // System.out.println();
           mEquivalent.add(cluster);
         }
       }
 
 
-
-      if(bPhase) View.phase1Print(fix.isEquivalent(machine.get(0), machine.get(1)));
+      if(bPhase)
+        View.phase1Print(fix.isEquivalent(machine.get(0), machine.get(1)));
       // else View.phase2Print(arrEquivalent);
 
       // after using View class, use .flush() to close buffered writer
-      View.out.flush();
+      // View.out.flush();
     }
 }
 
