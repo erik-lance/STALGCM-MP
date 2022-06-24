@@ -126,8 +126,8 @@ public class Solution {
       for (int r = 0; r < machine.size(); r++){
         ArrayList<String> cluster = new ArrayList<String>();
         checked = false;
+        // cluster.add(machine.get(r).getName());
         for (int s = r; s < machine.size(); s++){
-
           //check if that machine has already been added to an existing cluster
           for (int t = 0; t < mEquivalent.size(); t++){
             for (int u = 0; u < mEquivalent.get(t).size(); u++){
@@ -141,16 +141,20 @@ public class Solution {
           //check if you're checking equivalence of the same machine
           if (!machine.get(r).equals(machine.get(s)) && !checked){
             // System.out.println("\nYou are comparing " + machine.get(r).getName() + " and " + machine.get(s).getName());
-            if (!cluster.contains(machine.get(r).getName()))
-              cluster.add(machine.get(r).getName());
+            // if (!cluster.contains(machine.get(r).getName()))
+            //   cluster.add(machine.get(r).getName());
             // compare r and s machines
             if (fix.isEquivalent(machine.get(r), machine.get(s))){
               // System.out.println("**Equivalent");
               cluster.add(machine.get(s).getName());
+              // machine.remove(s);
             }
             else {
               // System.out.println("**Not Equivalent");
             }
+          }
+          else if (!checked){
+            cluster.add(machine.get(r).getName());
           }
         }
 
@@ -160,13 +164,13 @@ public class Solution {
             if (!cluster.get(temp).isEmpty())
               System.out.print(cluster.get(temp) + " ");
           }
-
+          System.out.println();
           mEquivalent.add(cluster);
         }
-
-        System.out.println();
-
       }
+
+
+
       if(bPhase) View.phase1Print(fix.isEquivalent(machine.get(0), machine.get(1)));
       // else View.phase2Print(arrEquivalent);
 
