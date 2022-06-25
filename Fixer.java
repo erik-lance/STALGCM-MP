@@ -8,9 +8,6 @@ public class Fixer {
         ArrayList<State> mStates1 = m1.getStates();
         ArrayList<State> mStates2 = m2.getStates();
 
-        State initState1 = m1.getInitialState();
-        State initState2 = m2.getInitialState();
-
         // CREATES A STORE STATE
         ArrayList<State> storageStates = new ArrayList<State>();
 
@@ -19,7 +16,7 @@ public class Fixer {
         storageStates.addAll(deepCloneStates(mStates2));
 
         // Rename to the necessary states.
-        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Q1","Q2","Q3","Q4","Q5"};
         int alphCounter = 0;
 
         // We want to rename the states properly to avoid mixups. This won't affect transitions since transitions
@@ -28,14 +25,6 @@ public class Fixer {
         {
             state.setName(alphabet[alphCounter]);
             alphCounter++;
-        }
-
-        for (State state : storageStates) {
-            if (state.isBInitial()) initState1 = state;
-        }
-
-        for (State state : storageStates) {
-            if (state.isBInitial() && !state.equals(initState1)) initState2 = state;
         }
 
         // ------ STATES COMPLETE; PARTITION STARTS HERE ------  //
@@ -106,16 +95,12 @@ public class Fixer {
         return false;
     }
 
-
     public Machine convertToDFA(Machine m) {
 
         // Reference to states
         ArrayList<State> mStates = m.getStates();
 
-        ArrayList<State> newStates = new ArrayList<State>();
         State initState = m.getInitialState();
-
-        newStates.add(new State(initState));
 
         // CREATES A STORE STATE
         ArrayList<State> storageStates = new ArrayList<State>();
@@ -153,10 +138,6 @@ public class Fixer {
 
         // Stops once machine finds there is no more to add
         while (cur_state != null) {
-            // System.out.println("Current Stack: ");
-            // System.out.println(stateStack+"\n\n");
-
-            // System.out.println("We're converting.. Now at: "+cur_state.getName());
             // Checks each input of said machine
             for (String input : m.getInputs())
             {
@@ -168,8 +149,6 @@ public class Fixer {
                 // Upon empty transitions at said input, connect cur_state to dead state
                 if (newName == null)
                 {
-                    // System.out.println("Look dead state found! at "+cur_state.getName());
-
                     // Adds dead state to list since it exists
                     if (!isDeadHere)
                     {
@@ -179,8 +158,6 @@ public class Fixer {
 
                     // Sets empty transition to transition to this dead state instead
                     cur_state.makeTransition(deadState, input);
-
-                    // break;
                 }
                 else
                 {
@@ -245,7 +222,61 @@ public class Fixer {
 
                                 // in This inner loop, we check for their transitions (C -> B) && (D -> E)
                                 // System.out.println("We're looking at the transitions of "+trans.getDest().getName());
+
+                                // Get connection to null state
+                                // if (trans.getDest().getTransitions() == null) 
+                                // {
+                                //     if (!isDeadHere)
+                                //     {
+                                //         isDeadHere = true;
+                                //         expanded.add(deadState);
+                                //     }
+
+                                //     // Sets empty transition to transition to this dead state instead
+                                //     for (String in : m.getInputs()) 
+                                //     {
+                                //         createState.makeTransition(deadState, in);
+                                //     }
+                                // }
+                                // else
+                                // {
+                                //     if (!isDeadHere)
+                                //     {
+                                //         isDeadHere = true;
+                                //         expanded.add(deadState);
+
+                                //         ArrayList<String>  missingInputs = new ArrayList<String>();
+                                //         HashSet<String> existInputs = new HashSet<String>();
+                                //         for (Transition t : trans.getDest().getTransitions()) 
+                                //         {
+                                //             existInputs.add(t.getInput());
+                                //         }
+
+
+                                //         for (String in : m.getInputs()) 
+                                //         {
+                                //             boolean existing = false;
+                                //             for (String not : existInputs) 
+                                //             {
+                                //                 if (not.equals(in))
+                                //                 {
+                                //                     existing = true;
+                                //                     break;
+                                //                 }
+                                //             }
+                                //             if (!existing) missingInputs.add(in);
+                                //         }
+
+                                //         for (String addS: missingInputs ) 
+                                //         {
+                                //             createState.makeTransition(deadState, addS);   
+                                //         }
+                                //     }
+                                    
+                                // }
+                                
                                 if (trans.getDest().getTransitions() == null) continue;
+
                                 for (Transition innerTrans : trans.getDest().getTransitions())
                                 {
                                     // We simply made a transition to the same destination as the states it's copying.
