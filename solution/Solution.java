@@ -157,12 +157,13 @@ public class Solution {
       }
 
 
-      if(bPhase)
-        View.phase1Print(fix.isEquivalent(machine.get(0), machine.get(1)));
-      // else View.phase2Print(arrEquivalent);
+        if(bPhase) View.phase1Print(fix.isEquivalent(machine.get(0), machine.get(1)));
+        else {
+            if(mEquivalent.size() > 0) View.phase2Print(mEquivalent);
+        }
 
-      // after using View class, use .flush() to close buffered writer
-      // View.out.flush();
+        // after using View class, use .flush() to close buffered writer
+        View.out.flush();
     }
 }
 
@@ -185,19 +186,24 @@ class View {
     /**
      * Prints number of clusters of equivalent machines and the names of the machines (lexicographically arranged)
      * separated by a single space.
-     * @param arrEquivalent an ArrayList<Machine> which contains clusters of equivalent machines
+     * @param arrEquivalent an ArrayList<ArrayList<String>> which contains clusters of equivalent machines
      */
-    public static void phase2Print(ArrayList<Machine> arrEquivalent) {
+    public static void phase2Print(ArrayList<ArrayList<String>> arrEquivalent) {
         try {
-            out.write(arrEquivalent.size() + "\n");
-            // lexicographically sorts arrEquivalent based on machine names
-            Collections.sort(arrEquivalent, new Comparator<Machine>() {
-                @Override
-                public int compare(Machine m1, Machine m2) {
-                    return m1.getName().compareToIgnoreCase(m2.getName());
-                }
-            });
-            for (Machine m : arrEquivalent) out.write(m.getName() + " ");
+            for (int i = 0; i < arrEquivalent.size(); i++) {
+                // output size of cluster
+                out.write(arrEquivalent.get(i).size() + "\n");
+                // lexicographically sorts a cluster in arrEquivalent based on machine names
+                Collections.sort(arrEquivalent.get(i), new Comparator<String>() {
+                    @Override
+                    public int compare(String m1, String m2) {
+                        return m1.compareToIgnoreCase(m2);
+                    }
+                });
+                // output machine names inside that cluster
+                for (String m : arrEquivalent.get(i)) out.write(m + " ");
+                out.write("\n");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -209,7 +215,8 @@ class View {
      */
     public static void machinePrint(Machine m) {
         try {
-            int i, j;
+            int i;
+            int j;
             State tempState;
             out.write("\nMachine Name: " + m.getName() + "\nInputs:\n");
             for (i = 0; i < m.getInputs().size(); i++) {
