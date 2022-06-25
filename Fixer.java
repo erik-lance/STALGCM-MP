@@ -16,14 +16,15 @@ public class Fixer {
         storageStates.addAll(deepCloneStates(mStates2));
 
         // Rename to the necessary states.
-        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Q1","Q2","Q3","Q4","Q5"};
+        //String[] alphabet = {};
         int alphCounter = 0;
 
         // We want to rename the states properly to avoid mixups. This won't affect transitions since transitions
         // hold a "State" type. Their names should update automatically.
         for (State state : storageStates)
         {
-            state.setName(alphabet[alphCounter]);
+            // alphabet[alphCounter] = ;
+            state.setName(String.valueOf(alphCounter));
             alphCounter++;
         }
 
