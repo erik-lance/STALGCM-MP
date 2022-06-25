@@ -634,7 +634,9 @@ class Fixer {
         for (State state : storageStates)
         {
             // alphabet[alphCounter] = ;
-            state.setName(String.valueOf(alphCounter));
+            // S to know where the name of the State starts
+            // to avoid state name 1,010 == 10-10
+            state.setName("S" + String.valueOf(alphCounter)); 
             alphCounter++;
         }
 
