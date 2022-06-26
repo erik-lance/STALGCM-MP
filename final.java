@@ -1131,13 +1131,13 @@ class Fixer {
      * @param group to check if it exists in
      * @return said state, else null
      */
-    // public State doesStateExist(State s, ArrayList<State> group) {
-    //    for (State state : group)
-    //    {
-    //        if (s.equals(state)) return state;
-    //    }
-    //    return null;
-    //}
+     public State doesStateExist(State s, ArrayList<State> group) {
+        for (State state : group)
+        {
+            if (s.equals(state)) return state;
+        }
+        return null;
+    }
 
     public State doesStateExist(String s, ArrayList<State> group) {
         if (s == null) return null;
