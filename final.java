@@ -1131,29 +1131,33 @@ class Fixer {
      * @param group to check if it exists in
      * @return said state, else null
      */
-    public State doesStateExist(State s, ArrayList<State> group) {
-        for (State state : group)
-        {
-            if (s.equals(state)) return state;
-        }
-        return null;
-    }
+    // public State doesStateExist(State s, ArrayList<State> group) {
+    //    for (State state : group)
+    //    {
+    //        if (s.equals(state)) return state;
+    //    }
+    //    return null;
+    //}
 
     public State doesStateExist(String s, ArrayList<State> group) {
         if (s == null) return null;
 
+        // Collection Sort
+        // deepEqual
         // System.out.println("Let's find "+s);
         for (State state : group)
         {
-            char[] content = state.getName().toCharArray();
-            java.util.Arrays.sort(content);
-            String sorted = new String(content);
+            ArrayList<String> stateToCompare = new ArrayList<String>();
+            ArrayList<String> fromGroupState = new ArrayList<String>();
 
-            content = s.toCharArray();
-            java.util.Arrays.sort(content);
-            String sorted2 = new String(content);
+            Collections.addAll(stateToCompare, s.split("S"));
+            Collections.addAll(fromGroupState, state.getName().split("S"));
 
-            if (sorted.equals(sorted2)) return state;
+            Collections.sort(stateToCompare);
+            Collections.sort(fromGroupState);
+
+
+            if (stateToCompare.equals(fromGroupState)) return state;
             // if (state.getName().contains(s)) return state;
         }
 
@@ -1161,6 +1165,28 @@ class Fixer {
 
         return null;
     }
+    // public State doesStateExist(String s, ArrayList<State> group) {
+    //    if (s == null) return null;
+    //
+    //    // System.out.println("Let's find "+s);
+    //    for (State state : group)
+    //    {
+    //        char[] content = state.getName().toCharArray();
+    //        java.util.Arrays.sort(content);
+    //        String sorted = new String(content);
+    //
+    //        content = s.toCharArray();
+    //        java.util.Arrays.sort(content);
+    //        String sorted2 = new String(content);
+    //
+    //        if (sorted.equals(sorted2)) return state;
+    //        // if (state.getName().contains(s)) return state;
+    //    }
+    //
+    //    // System.out.println(s+" does not exist yet\n\n");
+    //
+    //    return null;
+    //}
 
     public ArrayList<State> deepCloneStates(ArrayList<State> group) {
         ArrayList<State> clone = new ArrayList<State>();
