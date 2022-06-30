@@ -28,17 +28,26 @@ public class View {
      */
     public static void phase2Print(ArrayList<ArrayList<String>> arrEquivalent) {
         try {
+            int i;
+            // output size of cluster
             out.write(arrEquivalent.size() + "\n");
-            for (int i = 0; i < arrEquivalent.size(); i++) {
-                // output size of cluster
-                
+            for (i = 0; i < arrEquivalent.size(); i++) {                
                 // lexicographically sorts a cluster in arrEquivalent based on machine names
                 Collections.sort(arrEquivalent.get(i), new Comparator<String>() {
                     @Override
                     public int compare(String m1, String m2) {
                         return m1.compareToIgnoreCase(m2);
                     }
-                });
+                });                
+            }
+            // lexicographically sorts arrEquivalent based on machine names
+            Collections.sort(arrEquivalent, new Comparator<String>() {
+                @Override
+                public int compare(String m1, String m2) {
+                    return m1.compareToIgnoreCase(m2);
+                }
+             });
+            for (i = 0; i < arrEquivalent.size(); i++) {
                 // output machine names inside that cluster
                 for (String m : arrEquivalent.get(i)) out.write(m + " ");
                 out.write("\n");
