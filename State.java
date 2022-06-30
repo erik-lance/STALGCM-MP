@@ -199,6 +199,7 @@ public class State {
         return transList;
     }
 
+
     /**
      * Gets a full transition string (for DFAs) e.g. A-> B and A->C will return A -> BC
      * @param input string input to check
@@ -208,6 +209,7 @@ public class State {
         ArrayList<Transition> transList = getTransitions(input);
         String finalName = "";
 
+        // TODO: Check if || null is bad
         if (transList.size() <= 0) return null;
 
         // Concats every string name at destination

@@ -190,9 +190,10 @@ class View {
      */
     public static void phase2Print(ArrayList<ArrayList<String>> arrEquivalent) {
         try {
+            out.write(arrEquivalent.size() + "\n");
             for (int i = 0; i < arrEquivalent.size(); i++) {
                 // output size of cluster
-                out.write(arrEquivalent.get(i).size() + "\n");
+                
                 // lexicographically sorts a cluster in arrEquivalent based on machine names
                 Collections.sort(arrEquivalent.get(i), new Comparator<String>() {
                     @Override
@@ -216,7 +217,7 @@ class View {
     public static void machinePrint(Machine m) {
         try {
             int i;
-            int j;
+            //int j;
             State tempState;
             out.write("\nMachine Name: " + m.getName() + "\nInputs:\n");
             for (i = 0; i < m.getInputs().size(); i++) {
@@ -238,7 +239,6 @@ class View {
         }
     }
 }
-
 
 class Machine {
     String name;
@@ -667,9 +667,6 @@ class Fixer {
         ArrayList<State> mStates1 = m1.getStates();
         ArrayList<State> mStates2 = m2.getStates();
 
-        State initState1 = m1.getInitialState();
-        State initState2 = m2.getInitialState();
-
         // CREATES A STORE STATE
         ArrayList<State> storageStates = new ArrayList<State>();
 
@@ -678,7 +675,7 @@ class Fixer {
         storageStates.addAll(deepCloneStates(mStates2));
 
         // Rename to the necessary states.
-        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Q1","Q2","Q3","Q4","Q5"};
         int alphCounter = 0;
 
         // We want to rename the states properly to avoid mixups. This won't affect transitions since transitions
@@ -688,21 +685,6 @@ class Fixer {
             state.setName(alphabet[alphCounter]);
             alphCounter++;
         }
-
-        for (State state : storageStates) {
-            if (state.isBInitial()) initState1 = state;
-        }
-
-        for (State state : storageStates) {
-            if (state.isBInitial() && !state.equals(initState1)) initState2 = state;
-        }
-
-        //TODO: remove these
-        // System.out.println("Initial:: ");
-        // printStateList(storageStates);
-
-        // System.out.println("Trans: ");
-        // printStateDets(storageStates);
 
         // ------ STATES COMPLETE; PARTITION STARTS HERE ------  //
         ArrayList<ArrayList<State>> partitionGroup = new ArrayList<ArrayList<State>>();
@@ -726,37 +708,14 @@ class Fixer {
 
         boolean expandable = true;
 
-        int ctr = 0;
 
         // Checks if equivalent
         if (checkGroupInitials(partitionGroup))
         {
             while (expandable) {
-                // for (ArrayList<State> ppGroup : partitionGroup)
-                // {
-                //     System.out.println("TEST: "+ctr);
-                //     for (State pppGroup : ppGroup)
-                //     {
-                //         System.out.println(pppGroup.toString());
-                //     }
-                // }
-
-
                 ArrayList<ArrayList<State>> newGroup = new ArrayList<ArrayList<State>>();
                 newGroup = expandOnce(partitionGroup, m1.getInputs());
 
-                // For printing
-                // if (newGroup != null)
-                // {
-                //     for (ArrayList<State> gg : newGroup)
-                //     {
-                //         System.out.println("TEST2: "+ctr);
-                //         for (State sss : gg)
-                //         {
-                //             System.out.println(sss.toString());
-                //         }
-                //     }
-                // }
 
 
                 if (newGroup != null) {
@@ -795,16 +754,12 @@ class Fixer {
         return false;
     }
 
-
     public Machine convertToDFA(Machine m) {
 
         // Reference to states
         ArrayList<State> mStates = m.getStates();
 
-        ArrayList<State> newStates = new ArrayList<State>();
         State initState = m.getInitialState();
-
-        newStates.add(new State(initState));
 
         // CREATES A STORE STATE
         ArrayList<State> storageStates = new ArrayList<State>();
@@ -842,10 +797,6 @@ class Fixer {
 
         // Stops once machine finds there is no more to add
         while (cur_state != null) {
-            // System.out.println("Current Stack: ");
-            // System.out.println(stateStack+"\n\n");
-
-            // System.out.println("We're converting.. Now at: "+cur_state.getName());
             // Checks each input of said machine
             for (String input : m.getInputs())
             {
@@ -857,8 +808,6 @@ class Fixer {
                 // Upon empty transitions at said input, connect cur_state to dead state
                 if (newName == null)
                 {
-                    // System.out.println("Look dead state found! at "+cur_state.getName());
-
                     // Adds dead state to list since it exists
                     if (!isDeadHere)
                     {
@@ -868,8 +817,6 @@ class Fixer {
 
                     // Sets empty transition to transition to this dead state instead
                     cur_state.makeTransition(deadState, input);
-
-                    // break;
                 }
                 else
                 {
@@ -934,7 +881,61 @@ class Fixer {
 
                                 // in This inner loop, we check for their transitions (C -> B) && (D -> E)
                                 // System.out.println("We're looking at the transitions of "+trans.getDest().getName());
+
+                                // Get connection to null state
+                                // if (trans.getDest().getTransitions() == null) 
+                                // {
+                                //     if (!isDeadHere)
+                                //     {
+                                //         isDeadHere = true;
+                                //         expanded.add(deadState);
+                                //     }
+
+                                //     // Sets empty transition to transition to this dead state instead
+                                //     for (String in : m.getInputs()) 
+                                //     {
+                                //         createState.makeTransition(deadState, in);
+                                //     }
+                                // }
+                                // else
+                                // {
+                                //     if (!isDeadHere)
+                                //     {
+                                //         isDeadHere = true;
+                                //         expanded.add(deadState);
+
+                                //         ArrayList<String>  missingInputs = new ArrayList<String>();
+                                //         HashSet<String> existInputs = new HashSet<String>();
+                                //         for (Transition t : trans.getDest().getTransitions()) 
+                                //         {
+                                //             existInputs.add(t.getInput());
+                                //         }
+
+
+                                //         for (String in : m.getInputs()) 
+                                //         {
+                                //             boolean existing = false;
+                                //             for (String not : existInputs) 
+                                //             {
+                                //                 if (not.equals(in))
+                                //                 {
+                                //                     existing = true;
+                                //                     break;
+                                //                 }
+                                //             }
+                                //             if (!existing) missingInputs.add(in);
+                                //         }
+
+                                //         for (String addS: missingInputs ) 
+                                //         {
+                                //             createState.makeTransition(deadState, addS);   
+                                //         }
+                                //     }
+                                    
+                                // }
+                                
                                 if (trans.getDest().getTransitions() == null) continue;
+
                                 for (Transition innerTrans : trans.getDest().getTransitions())
                                 {
                                     // We simply made a transition to the same destination as the states it's copying.
@@ -1303,3 +1304,4 @@ class Fixer {
         }
     }
 }
+

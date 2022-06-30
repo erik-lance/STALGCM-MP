@@ -28,9 +28,10 @@ public class View {
      */
     public static void phase2Print(ArrayList<ArrayList<String>> arrEquivalent) {
         try {
+            out.write(arrEquivalent.size() + "\n");
             for (int i = 0; i < arrEquivalent.size(); i++) {
                 // output size of cluster
-                out.write(arrEquivalent.get(i).size() + "\n");
+                
                 // lexicographically sorts a cluster in arrEquivalent based on machine names
                 Collections.sort(arrEquivalent.get(i), new Comparator<String>() {
                     @Override

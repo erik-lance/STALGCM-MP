@@ -136,7 +136,8 @@ public class Main {
           machine.add(new Machine (mName, nTrans));
 
           //uses number of states to create the states of the machine
-          for (l = 0; l < nTrans; l++){
+          for (l = 0; l < nTrans; l++)
+          {
             mTrans = buffer.readLine(); //gets the transition line
             String tName, tIn, tDest;
             String[] transitions = new String[3];
@@ -158,7 +159,7 @@ public class Main {
               }
             }
 
-        }
+          }
 
         // find state and set as initial
         mInitial = buffer.readLine();
@@ -205,7 +206,7 @@ public class Main {
         if (!machine.get(i).isMDFA()){
           // Machine mTemp = machine.get(i);
           machine.set(i, fix.convertToDFA(machine.get(i)));
-        }
+        } 
 
         // System.out.println("[3]");
         // prints machine for debugging purposes - TO COMMENT OUT later
