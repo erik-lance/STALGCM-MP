@@ -675,7 +675,12 @@ class Fixer {
         storageStates.addAll(deepCloneStates(mStates2));
 
         // Rename to the necessary states.
-        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Q1","Q2","Q3","Q4","Q5"};
+        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+                            "-1","-2","-3","-4","-5","-6","-7","-8","-9",
+                            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+                            ""
+                        
+                            };
         int alphCounter = 0;
 
         // We want to rename the states properly to avoid mixups. This won't affect transitions since transitions
