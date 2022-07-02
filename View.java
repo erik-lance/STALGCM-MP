@@ -36,7 +36,7 @@ public class View {
                 Collections.sort(arrEquivalent.get(i), new Comparator<String>() {
                     @Override
                     public int compare(String m1, String m2) {
-                        return m1.compareToIgnoreCase(m2);
+                        return m1.compareTo(m2);
                     }
                 });                
             }
@@ -44,7 +44,7 @@ public class View {
             Collections.sort(arrEquivalent, new Comparator<ArrayList<String>> () {
                 @Override
                 public int compare(ArrayList<String> m1, ArrayList<String> m2) {
-                return m1.get(0).compareToIgnoreCase(m2.get(0));
+                return m1.get(0).compareTo(m2.get(0));
                 }
             });
             for (i = 0; i < arrEquivalent.size(); i++) {

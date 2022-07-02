@@ -35,131 +35,134 @@ public class Solution {
           String nothing = buffer.readLine();
         }
 
-        for (i = 0; i < numMachines; i++){
-          ArrayList<State> allStates = new ArrayList<State>();
-          ArrayList<String> allInputs = new ArrayList<String>();
+        for (i = 0; i < numMachines; i++)
+        {
+            ArrayList<State> allStates = new ArrayList<State>();
+            ArrayList<String> allInputs = new ArrayList<String>();
 
-          mName = buffer.readLine();
-          nStates = Integer.parseInt(buffer.readLine());
+            mName = buffer.readLine();
+            nStates = Integer.parseInt(buffer.readLine());
 
-          //uses number of states to create the states of the machine
-          for (j = 0; j < nStates; j++){
-            mState = buffer.readLine();
-            allStates.add(new State(mState));
-          }
+            //uses number of states to create the states of the machine
+            for (j = 0; j < nStates; j++){
+                mState = buffer.readLine();
+                allStates.add(new State(mState));
+            }
 
-          nInputs = Integer.parseInt(buffer.readLine());
+            nInputs = Integer.parseInt(buffer.readLine());
 
-          //uses number of inputs to create the inputs of the machine
-          for (k = 0; k < nInputs; k++){
-            //add validation if needed
-            allInputs.add(buffer.readLine());
-          }
+            //uses number of inputs to create the inputs of the machine
+            for (k = 0; k < nInputs; k++){
+                //add validation if needed
+                allInputs.add(buffer.readLine());
+            }
 
-          nTrans = Integer.parseInt(buffer.readLine());
-          machine.add(new Machine (mName, nTrans));
+            nTrans = Integer.parseInt(buffer.readLine());
+            machine.add(new Machine (mName, nTrans));
 
-          //uses number of states to create the states of the machine
-          for (l = 0; l < nTrans; l++){
-            mTrans = buffer.readLine(); //gets the transition line
-            String tName, tIn, tDest;
-            String[] transitions = new String[3];
-            transitions = mTrans.split("\\s+");
-            tName = transitions[0];
-            tIn = transitions[1];
-            tDest = transitions[2];
+            //uses number of states to create the states of the machine
+            for (l = 0; l < nTrans; l++){
+                mTrans = buffer.readLine(); //gets the transition line
+                String tName, tIn, tDest;
+                String[] transitions = new String[3];
+                transitions = mTrans.split("\\s+");
+                tName = transitions[0];
+                tIn = transitions[1];
+                tDest = transitions[2];
 
-            //find the state and make the transitions
-            for (m = 0; m < allStates.size(); m++){
-              if (allStates.get(m).equals(tName)){
+                //find the state and make the transitions
+                for (m = 0; m < allStates.size(); m++){
+                if (allStates.get(m).equals(tName)){
 
-                for (n = 0; n < allStates.size(); n++){
-                  if (allStates.get(n).equals(tDest)){
-                    allStates.get(m).makeTransition(allStates.get(n), tIn);
-                    // allStates.get(m).displayTransitions();
-                  }
+                    for (n = 0; n < allStates.size(); n++){
+                    if (allStates.get(n).equals(tDest)){
+                        allStates.get(m).makeTransition(allStates.get(n), tIn);
+                        // allStates.get(m).displayTransitions();
+                    }
+                    }
                 }
-              }
+                }
+
             }
 
-        }
-
-        // find state and set as initial
-        mInitial = buffer.readLine();
-        for (m = 0; m < allStates.size(); m++){
-          if (allStates.get(m).equals(mInitial)){
-            allStates.get(m).setBInitial(true);
-          }
-        }
-
-        nFinals = Integer.parseInt(buffer.readLine());
-        for (n = 0; n < nFinals; n++){
-          mFinal = buffer.readLine();
-          // find state and set as final
-          for (m = 0; m < allStates.size(); m++){
-            if (allStates.get(m).equals(mFinal)){
-              allStates.get(m).setBFinal(true);
+            // find state and set as initial
+            mInitial = buffer.readLine();
+            for (m = 0; m < allStates.size(); m++){
+            if (allStates.get(m).equals(mInitial)){
+                allStates.get(m).setBInitial(true);
             }
-          }
-        }
-        machine.get(i).setStates(allStates);
-        machine.get(i).setInputs(allInputs);
+            }
 
-        //check if NFA
-        if (!machine.get(i).isMDFA()){
-          // Machine mTemp = machine.get(i);
-          machine.set(i, fix.convertToDFA(machine.get(i)));
-        }
+            nFinals = Integer.parseInt(buffer.readLine());
+            for (n = 0; n < nFinals; n++){
+            mFinal = buffer.readLine();
+            // find state and set as final
+            for (m = 0; m < allStates.size(); m++){
+                if (allStates.get(m).equals(mFinal)){
+                allStates.get(m).setBFinal(true);
+                }
+            }
+            }
+            machine.get(i).setStates(allStates);
+            machine.get(i).setInputs(allInputs);
 
-        String nothing;
-        if (i+1 < numMachines)
-          nothing = buffer.readLine();
-      }
+            //check if NFA
+            if (!machine.get(i).isMDFA()){
+            // Machine mTemp = machine.get(i);
+            machine.set(i, fix.convertToDFA(machine.get(i)));
+            }
+
+            String nothing;
+            if (i+1 < numMachines)
+            nothing = buffer.readLine();
+        }
 
       ArrayList<ArrayList<String>> mEquivalent = new ArrayList<ArrayList<String>>();
       boolean checked = false;
 
-      for (int r = 0; r < machine.size(); r++){
-        ArrayList<String> cluster = new ArrayList<String>();
-        checked = false;
-        // cluster.add(machine.get(r).getName());
-        for (int s = r; s < machine.size(); s++){
-          //check if that machine has already been added to an existing cluster
-          for (int t = 0; t < mEquivalent.size(); t++){
-            for (int u = 0; u < mEquivalent.get(t).size(); u++){
-              if (mEquivalent.get(t).get(u).equals(machine.get(r).getName()))
-                checked = true;
+        for (int r = 0; r < machine.size(); r++)
+        {
+            ArrayList<String> cluster = new ArrayList<String>();
+            checked = false;
+            // cluster.add(machine.get(r).getName());
+            for (int s = r; s < machine.size(); s++)
+            {
+                //check if that machine has already been added to an existing cluster
+                for (int t = 0; t < mEquivalent.size(); t++)
+                {
+                    for (int u = 0; u < mEquivalent.get(t).size(); u++)
+                    {
+                        if (mEquivalent.get(t).get(u).equals(machine.get(r).getName()))
+                            checked = true;
+                    }
+
+                }
+
+                //check if you're checking equivalence of the same machine
+                if (!machine.get(r).equals(machine.get(s)) && !checked)
+                {
+                    // compare r and s machines
+                    if (fix.isEquivalent(machine.get(r), machine.get(s)))
+                    {
+                        cluster.add(machine.get(s).getName());
+                    }
+                }
+                else if (!checked)
+                {
+                    cluster.add(machine.get(r).getName());
+                }
             }
 
-          }
-
-          //check if you're checking equivalence of the same machine
-          if (!machine.get(r).equals(machine.get(s)) && !checked){
-            // compare r and s machines
-            if (fix.isEquivalent(machine.get(r), machine.get(s))){
-              cluster.add(machine.get(s).getName());
+            if (cluster.size() > 0)
+            {
+                mEquivalent.add(cluster);
             }
-          }
-          else if (!checked){
-            cluster.add(machine.get(r).getName());
-          }
         }
-
-        if (cluster.size() > 0){
-          // // TEST PRINTS
-          // System.out.print("\nCluster: ");
-          // for (int temp = 0; temp < cluster.size(); temp++){
-          //   if (!cluster.get(temp).isEmpty())
-          //     System.out.print(cluster.get(temp) + " ");
-          // }
-          mEquivalent.add(cluster);
-        }
-      }
 
 
         if(bPhase) View.phase1Print(fix.isEquivalent(machine.get(0), machine.get(1)));
         else {
-            if(mEquivalent.size() > 0) View.phase2Print(mEquivalent);
+            View.phase2Print(mEquivalent);
         }
 
         // after using View class, use .flush() to close buffered writer
@@ -183,7 +186,7 @@ class View {
         }
     }
 
-     /**
+    /**
      * Prints number of clusters of equivalent machines and the names of the machines (lexicographically arranged)
      * separated by a single space.
      * @param arrEquivalent an ArrayList<ArrayList<String>> which contains clusters of equivalent machines
@@ -198,15 +201,15 @@ class View {
                 Collections.sort(arrEquivalent.get(i), new Comparator<String>() {
                     @Override
                     public int compare(String m1, String m2) {
-                        return m1.compareToIgnoreCase(m2);
+                        return m1.compareTo(m2);
                     }
                 });                
             }
             // lexicographically sorts arrEquivalent based on machine names
-           Collections.sort(arrEquivalent, new Comparator<ArrayList<String>> () {
+            Collections.sort(arrEquivalent, new Comparator<ArrayList<String>> () {
                 @Override
                 public int compare(ArrayList<String> m1, ArrayList<String> m2) {
-                return m1.get(0).compareToIgnoreCase(m2.get(0));
+                return m1.get(0).compareTo(m2.get(0));
                 }
             });
             for (i = 0; i < arrEquivalent.size(); i++) {
@@ -684,11 +687,10 @@ class Fixer {
         storageStates.addAll(deepCloneStates(mStates2));
 
         // Rename to the necessary states.
-        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+        String[] alphabet = {
+                            "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
                             "1","2","3","4","5","6","7","8","9",
-                            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
-                            ""
-                        
+                            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"
                             };
         int alphCounter = 0;
 

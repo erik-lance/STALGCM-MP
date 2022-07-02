@@ -16,11 +16,10 @@ public class Fixer {
         storageStates.addAll(deepCloneStates(mStates2));
 
         // Rename to the necessary states.
-        String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+        String[] alphabet = {
+                            "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
                             "1","2","3","4","5","6","7","8","9",
-                            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
-                            ""
-                        
+                            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"
                             };
         int alphCounter = 0;
 
@@ -127,7 +126,7 @@ public class Fixer {
 
 
         /* --------------- Dead State Code --------------- */
-        State deadState = new State("_dd", false, false);
+        State deadState = new State("_", false, false);
         boolean isDeadHere = false;
 
         for (String input : m.getInputs())
