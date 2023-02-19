@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class Fixer {
@@ -241,6 +242,7 @@ public class Fixer {
                                 //     {
                                 //         createState.makeTransition(deadState, in);
                                 //     }
+                                //     continue;
                                 // }
                                 // else
                                 // {
@@ -582,27 +584,31 @@ public class Fixer {
     }
 
     public State doesStateExist(String s, ArrayList<State> group) {
-        if (s == null) return null;
-
-        // System.out.println("Let's find "+s);
-        for (State state : group)
-        {
-            char[] content = state.getName().toCharArray();
-            java.util.Arrays.sort(content);
-            String sorted = new String(content);
-
-            content = s.toCharArray();
-            java.util.Arrays.sort(content);
-            String sorted2 = new String(content);
-
-            if (sorted.equals(sorted2)) return state;
-            // if (state.getName().contains(s)) return state;
+            if (s == null) return null;
+    
+            // Collection Sort
+            // deepEqual
+            // System.out.println("Let's find "+s);
+            for (State state : group)
+            {
+                ArrayList<String> stateToCompare = new ArrayList<String>();
+                ArrayList<String> fromGroupState = new ArrayList<String>();
+    
+                Collections.addAll(stateToCompare, s.split("S"));
+                Collections.addAll(fromGroupState, state.getName().split("S"));
+    
+                Collections.sort(stateToCompare);
+                Collections.sort(fromGroupState);
+    
+    
+                if (stateToCompare.equals(fromGroupState)) return state;
+                // if (state.getName().contains(s)) return state;
+            }
+    
+            // System.out.println(s+" does not exist yet\n\n");
+    
+            return null;
         }
-
-        // System.out.println(s+" does not exist yet\n\n");
-
-        return null;
-    }
 
     public ArrayList<State> deepCloneStates(ArrayList<State> group) {
         ArrayList<State> clone = new ArrayList<State>();
